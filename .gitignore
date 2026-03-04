@@ -1,3 +1,6 @@
 node_modules/
 dist/
 .env
+
+# Claude Desktop/CLI project settings — contains embedded API keys in permission strings
+.claude/
