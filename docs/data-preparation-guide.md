@@ -187,10 +187,10 @@ Each question set maps to **10 JotForm fields**: 4 image result textboxes + 2 fo
 
 | Batch | Set 1 (Q9) qid | Set 2 (Q10) qid | Stored value |
 |---|---|---|---|
-| Batch 1 — Scene | `226` | `229` | `A` / `B` / `9999` |
-| Batch 2 — Staff | `225` | `230` | `A` / `B` / `9999` |
-| Batch 3 | `227` | `231` | `A` / `B` / `9999` |
-| Batch 4 | `228` | `232` | `A` / `B` / `9999` |
+| Batch 1 — Scene | `226` | `229` | `a`–`d` or `9999` |
+| Batch 2 — Staff | `225` | `230` | `e`–`h` or `9999` |
+| Batch 3 | `227` | `231` | `i`–`l` or `9999` |
+| Batch 4 | `228` | `232` | `m`–`p` or `9999` |
 
 #### Per-batch follow-up + observation fields
 

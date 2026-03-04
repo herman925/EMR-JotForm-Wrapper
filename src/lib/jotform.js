@@ -18,7 +18,7 @@ const API_KEY  = import.meta.env.VITE_JOTFORM_API_KEY
  * JotForm field types:
  *   control_radio / textbox / textarea → submission[qid] = value  (string)
  *   control_checkbox                   → submission[qid][0] = v0, [1] = v1, …  (Array)
- *   image result fields (textbox)      → submission[qid] = label  (string: A/B/9999)
+ *   image result fields (textbox)      → submission[qid] = letter (a–p or 9999)
  *
  * Pass an Array for any checkbox field; strings for everything else.
  *

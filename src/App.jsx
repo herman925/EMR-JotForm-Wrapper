@@ -117,10 +117,12 @@ export default function App() {
     //   arr()  → Array   (control_checkbox — must use indexed submission[qid][i] notation)
     const val = (v)  => v && v !== 'N/A' ? v : '9999'
     const arr = (a)  => a?.length ? [...a]  : []
-    // Image picker: JotForm label, not URL. correct=A, wrong=B, N/A or empty=9999
-    const imageLabel = (sel, correct) => {
+    // Image picker: store the actual filename letter (a–d batch1, e–h batch2,
+    // i–l batch3, m–p batch4). N/A or unselected = '9999'.
+    const imageChar = (sel) => {
       if (!sel || sel === 'N/A') return '9999'
-      return correct ? 'A' : 'B'
+      const m = sel.match(/_Q\d+([a-p])\.jpg$/i)
+      return m ? m[1] : '9999'
     }
 
     for (const q of FEELINGS_QUESTIONS) {
@@ -143,10 +145,10 @@ export default function App() {
       const b2qid = IMAGE_BLOCK_QIDS.batch2[block.index]
       const b3qid = IMAGE_BLOCK_QIDS.batch3[block.index]
       const b4qid = IMAGE_BLOCK_QIDS.batch4[block.index]
-      if (b1qid) answers[b1qid] = imageLabel(v.batch1Selected, v.batch1Correct)
-      if (b2qid) answers[b2qid] = imageLabel(v.batch2Selected, v.batch2Correct)
-      if (b3qid) answers[b3qid] = imageLabel(v.batch3Selected, v.batch3Correct)
-      if (b4qid) answers[b4qid] = imageLabel(v.batch4Selected, v.batch4Correct)
+      if (b1qid) answers[b1qid] = imageChar(v.batch1Selected)
+      if (b2qid) answers[b2qid] = imageChar(v.batch2Selected)
+      if (b3qid) answers[b3qid] = imageChar(v.batch3Selected)
+      if (b4qid) answers[b4qid] = imageChar(v.batch4Selected)
 
       // Per-batch follow-up checkboxes + observation textareas
       const bqids = IMAGE_BLOCK_BATCH_QIDS[block.index]

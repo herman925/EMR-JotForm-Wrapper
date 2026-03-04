@@ -208,7 +208,7 @@ Progress bar maps `progressCurrent = section - 1` onto `SECTION_LABELS` (5 label
 
 - **Header:** white, `max-w-3xl` (iPad-friendly), KS logo `h-12`. Subtitle hidden on mobile (`hidden sm:block`). Student pill: name (bold) → classId · sessionId on one line (orange dot separator) → district below. Compact enough for a 3-line pill.
 - **Progress bar:** scroll-driven; only attached when `surveyReady === true`; does not overwrite `DONE` state (section 5).
-- **Class dropdown:** `AdminFields` receives `schoolClasses` (sorted unique Class ID 25/26 for the student's school) and `onClassChange`. Selecting a new class triggers `getConfig()` to update `config` + `sessionId`. If school has only one class, shown as read-only input.
+- **Class dropdown:** `AdminFields` receives `schoolClasses` (sorted `{ classId, className }` objects for the student's school) and `onClassChange`. Selecting a new class triggers `getConfig()` to update `config` + `sessionId`. Options display as `{Class Name} ({Class ID})` but the submitted value is always the raw Class ID. If school classes are unavailable, shown as an editable text input.
 - **Image placeholders:** coloured tiles shown when an image is missing or 404. `onError` state inside `ImagePicker`.
 - **Static assets:** all served from `public/` — CSVs at `public/config/`, images at `public/assets/images/`, logo at `public/assets/logos/KS.png`. All fetch paths use `import.meta.env.BASE_URL`.
 
@@ -237,7 +237,7 @@ create table responses (
 | `control_textbox` / `control_textarea` | `submission[qid] = value` | Plain string or `9999` |
 | `control_checkbox` | `submission[qid][0] = v0`, `[1] = v1` | Empty array → field omitted (not `9999`) |
 | `control_dropdown` | `submission[qid] = exactOptionText` | Must match JotForm option exactly |
-| Image result textbox | `submission[qid] = A \| B \| 9999` | `A`=correct, `B`=wrong, `9999`=N/A or skipped |
+| Image result textbox | `submission[qid] = letter \| 9999` | Actual filename letter (`a`–`d` batch1, `e`–`h` batch2, `i`–`l` batch3, `m`–`p` batch4); `9999`=N/A or skipped |
 
 ### Confirmed qid mappings (Round II form `260617738275465`)
 

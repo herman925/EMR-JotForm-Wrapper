@@ -37,77 +37,88 @@ const FORM_ID  = env.VITE_JOTFORM_FORM_ID
 const API_KEY  = env.VITE_JOTFORM_API_KEY
 
 // ── Sample payload — mirrors exactly what App.jsx builds ──────────────────────
-// imageLabel helper (same logic as App.jsx)
-const imageLabel = (sel, correct) => (!sel || sel === 'N/A') ? '9999' : (correct ? 'A' : 'B')
+// imageChar helper (same logic as App.jsx) — extracts the filename letter (a–p) or '9999'
+const imageChar = (filename) => {
+  if (!filename || filename === 'N/A') return '9999'
+  const m = filename.match(/_Q\d+([a-p])\.jpg$/i)
+  return m ? m[1] : '9999'
+}
 const val        = (v)            => (v && v !== 'N/A')      ? v       : '9999'
 const arr        = (a)            => a?.length               ? [...a]  : []
 // NOTE: arr() returns an Array — buildPayload handles it with submission[qid][i] notation
 // Empty arrays are skipped by buildPayload (no field sent = leave blank in JotForm)
 
 // Simulate a completely filled-in form for student St10001 / class C-001-01
+// Every field has a real, non-empty answer to verify full-house qid coverage.
 const answers = {
-  // ── Admin (qids from ADMIN_QIDS) ─────────────────────────────────────────
-  '204': 'Test Interviewer',           // interviewerName
-  '212': 'Round II',                   // phase
-  '207': '2026-03-04',                 // interviewDate
-  '100': 'St10001',                    // studentId
-  '58':  'Test Student',               // studentName
-  '186': 'Test School',                // schoolName
-  '201': 'C-001-01',                   // studentClass
-  '213': '九龍城',                     // district (must match JotForm dropdown option exactly)
+  // ── Admin ────────────────────────────────────────────────────────────────
+  '204': 'Test Interviewer',
+  '212': 'Round II',
+  '207': '2026-03-04',
+  '100': 'St10001',
+  '58':  'Test Student',
+  '186': 'Test School',
+  '201': 'C-001-01',
+  '213': '九龍城',
 
-  // ── Feelings Q1–Q6 (qids from FEELINGS_QUESTIONS) ────────────────────────
-  // Q1a–Q4a: control_radio  → plain string
-  // Q5a, Q6a: control_checkbox (single-select) → Array with one element
-  // QXb follow-ups: control_checkbox (multi-select) → Array
-  '16':  val('🙂'),                               // Q1a radio
-  '144': arr(['係乜嘢令到你開心？']),               // Q1b checkbox  → [option]
-  '105': val('No observation'),                   // Q1c textarea
+  // ── Feelings Q1–Q6 ───────────────────────────────────────────────────────
+  // Q1a–Q4a: control_radio; Q5a/Q6a: control_checkbox (single-select)
+  // QXb: control_checkbox (multi-select); QXc: textarea
+  '16':  val('🙂'),
+  '144': arr(['係乜嘢令到你開心/唔開心？（根據幼兒上一題的回答提問）']),
+  '105': val('Child smiled throughout Q1'),
 
-  '24':  val('😃'),  '148': arr([]),    '106': val(''),
-  '25':  val('🙂'),  '149': arr([]),    '112': val(''),
-  '26':  val('😐'),  '150': arr([]),    '116': val(''),
+  '24':  val('😃'),
+  '148': arr(['同朋友喺呢度玩嘅時候，邊樣嘢最好玩？', '你仲想喺呢度同朋友玩啲咩新遊戲？']),
+  '106': val('Very enthusiastic about peer play'),
 
-  // Q5a: control_checkbox, options: 安全|不安全
-  '211': [val('安全')],   '151': arr([]),  '120': val(''),
-  // Q6a: control_checkbox, options: 有|沒有
-  '209': [val('有')],     '152': arr([]),  '124': val(''),
+  '25':  val('🙂'),
+  '149': arr(['點解你鐘意/唔鐘意玩嗰個玩具/設施？', '你希望童亮館有啲咩玩？']),
+  '112': val('Pointed to the climbing frame'),
 
-  // ── Memory Q7–Q8 ──────────────────────────────────────────────────────────
-  '187': val('2'),                     // Q7 textbox
-  '127': val('玩過積木同扮演遊戲'),     // Q8 textarea
+  '26':  val('😃'),
+  '150': arr(['點解你鐘意/唔鐘意嗰啲活動？', '你覺得最好玩嘅活動係咩？']),
+  '116': val('Mentioned the group singing activity'),
 
-  // ── Image blocks (sets 1 + 2 only — sets 3–8 have null qids, skipped) ─────
-  // Set 1 (Q9): correct for batch1+batch4, wrong for batch2, N/A for batch3
-  '226': imageLabel('KC-01_Q1a.jpg', true),   // Q9.1a batch1 → 'A' (correct)
-  '225': imageLabel('KC-01_Q1f.jpg', false),  // Q9.2a batch2 → 'B' (wrong)
-  '227': imageLabel('N/A', false),             // Q9.3a batch3 → '9999' (N/A)
-  '228': imageLabel('KC-01_Q1m.jpg', true),   // Q9.4a batch4 → 'A' (correct)
-  // Set 1 per-batch follow-up + observation (IMAGE_BLOCK_BATCH_QIDS[1])
-  '153': arr(['可唔可以講下你喺呢個場景度做過啲咩？']),  // Q9.1b batch1 follow-up
-  '157': val('Student recalled climbing the wall'),    // Q9.1c batch1 observation
-  '155': arr(['你記得你哋一起做咗啲咩嗎？', '嗰陣你覺得點呀？']), // Q9.2b batch2 follow-up
-  '158': val('Student pointed confidently'),           // Q9.2c batch2 observation
-  '159': val('Hesitated briefly'),                    // Q9.3b batch3 observation
-  '218': val(''),                                     // Q9.4b batch4 observation (blank)
+  '211': [val('安全')],
+  '151': arr(['（若幼兒回答安全）有冇啲乜嘢令你感到安全？']),
+  '120': val('Child said the teachers make her feel safe'),
 
-  // Set 2 (Q10): all N/A
-  '229': imageLabel(null, false),   // Q10.1a batch1
-  '230': imageLabel(null, false),   // Q10.2a batch2
-  '231': imageLabel(null, false),   // Q10.3a batch3
-  '232': imageLabel(null, false),   // Q10.4a batch4
-  // Set 2 per-batch follow-up + observation (IMAGE_BLOCK_BATCH_QIDS[2])
-  '202': arr([]),   // Q10.1b batch1 follow-up (not asked)
-  '163': val(''),  // Q10.1c batch1 observation
-  '165': arr([]),  // Q10.2b batch2 follow-up
-  '166': val(''),  // Q10.2c batch2 observation
-  '169': val(''),  // Q10.3b batch3 observation
-  '221': val(''),  // Q10.4b batch4 observation
+  '209': [val('有')],
+  '152': arr(['（若幼兒回答係肯定）佢哋係點樣幫助你架？']),
+  '124': val('Child described a staff member helping with a puzzle'),
 
-  // ── Closing ───────────────────────────────────────────────────────────────
-  // Q11a (160): control_checkbox → Array
-  '160': arr(['你仲想唔想再嚟童亮館？', '點解你想再嚟？']),  // Q11a follow-up
-  '43':  val('Child seemed tired but cooperative'),          // Q11b observation
+  // ── Memory Q7–Q8 ─────────────────────────────────────────────────────────
+  '187': val('3'),
+  '127': val('玩過積木、扮演遊戲同唱歌'),
+
+  // ── Image blocks — Set 1 (Q9) ─────────────────────────────────────────────
+  '226': imageChar('KC-01_Q1a.jpg'),    // Q9.1a batch1 → 'a' (correct scene)
+  '225': imageChar('KC-01_Q1f.jpg'),    // Q9.2a batch2 → 'f' (wrong staff)
+  '227': imageChar('KC-01_Q1i.jpg'),    // Q9.3a batch3 → 'i' (correct)
+  '228': imageChar('KC-01_Q1m.jpg'),    // Q9.4a batch4 → 'm' (correct)
+  '153': arr(['可唔可以講下你喺呢個場景度做過啲咩？']),
+  '157': val('Child recalled climbing the wall confidently'),
+  '155': arr(['你記得你哋一起做咗啲咩嗎？', '嗰陣你覺得點呀？']),
+  '158': val('Child pointed at teacher and smiled'),
+  '159': val('Brief hesitation before selecting'),
+  '218': val('Child was decisive on batch 4'),
+
+  // ── Image blocks — Set 2 (Q10) ────────────────────────────────────────────
+  '229': imageChar('KC-01_Q2a.jpg'),    // Q10.1a batch1 → 'a' (correct scene)
+  '230': imageChar('KC-01_Q2e.jpg'),    // Q10.2a batch2 → 'e' (correct staff)
+  '231': imageChar('KC-01_Q2j.jpg'),    // Q10.3a batch3 → 'j' (wrong)
+  '232': imageChar('KC-01_Q2n.jpg'),    // Q10.4a batch4 → 'n' (wrong)
+  '202': arr(['可唔可以講下你喺呢個場景度做過啲咩？']),
+  '163': val('Child recognised the art room immediately'),
+  '165': arr(['你記得你哋一起做咗啲咩嗎？', '嗰陣你覺得點呀？']),
+  '166': val('Child named the teacher correctly'),
+  '169': val('Took a moment then chose the wrong one'),
+  '221': val('Child seemed unsure on batch 4'),
+
+  // ── Closing ──────────────────────────────────────────────────────────────
+  '160': arr(['你仲想唔想再嚟童亮館？', '點解你想再嚟？']),
+  '43':  val('Child was engaged throughout; seemed comfortable and eager'),
 }
 
 // ── Build URLSearchParams (mirrors jotform.js buildPayload) ─────────────────
