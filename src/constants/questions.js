@@ -113,4 +113,4 @@ export const IMAGE_BLOCK_QIDS = {
   staff: { 1: null, 2: null, 3: null, 4: null, 5: null, 6: null, 7: null, 8: null },
 }
 
-export const SECTION_LABELS = ['學生', '基本', '感受', '記憶', '圖片', '完成']
+export const SECTION_LABELS = ['基本資料', '感受', '記憶', '圖片', '完成']

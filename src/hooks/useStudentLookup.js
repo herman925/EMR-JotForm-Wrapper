@@ -48,5 +48,18 @@ export function useStudentLookup() {
     }
   }, [])
 
-  return { lookup, loading, error }
+  /** Return sorted unique Class ID 25/26 values for a given School ID (requires prior lookup call) */
+  const getSchoolClasses = useCallback((schoolId) => {
+    if (!_cache || !schoolId) return []
+    const seen = new Set()
+    for (const row of _cache) {
+      if (row['School ID']?.trim() === schoolId.trim()) {
+        const cid = row['Class ID 25/26']?.trim()
+        if (cid) seen.add(cid)
+      }
+    }
+    return [...seen].sort()
+  }, [])
+
+  return { lookup, loading, error, getSchoolClasses }
 }

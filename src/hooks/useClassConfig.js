@@ -69,8 +69,6 @@ export function useClassConfig() {
 
       return {
         classId:   row['ClassID'],
-        schoolId:  row['SchoolID'],
-        district:  row['District'],
         sessionId: row['SessionID'],
         blocks,
       }

@@ -8,7 +8,7 @@ export default function StudentLookup({ onResolved }) {
   const [foundConfig, setFoundConfig]   = useState(null)
   const [configMissing, setConfigMissing] = useState(false)
 
-  const { lookup, loading: lookupLoading, error: lookupError } = useStudentLookup()
+  const { lookup, loading: lookupLoading, error: lookupError, getSchoolClasses } = useStudentLookup()
   const { getConfig, loading: configLoading }                  = useClassConfig()
 
   const loading = lookupLoading || configLoading
@@ -32,7 +32,8 @@ export default function StudentLookup({ onResolved }) {
   }
 
   function handleConfirm() {
-    onResolved({ student: foundStudent, config: foundConfig })
+    const schoolClasses = getSchoolClasses(foundStudent.schoolId)
+    onResolved({ student: foundStudent, config: foundConfig, schoolClasses })
   }
 
   return (
