@@ -42,13 +42,14 @@ export default function ImageBlock({ block, values = {}, onChange }) {
 
       {/* Follow-up */}
       <FollowUpCheckbox
-        label="跟進問題"
+        label={`Q${n}.b. 跟進問題`}
         options={['可唔可以講下你喺呢個場景度做過啲咩？', '嗰陣你覺得點呀？']}
         values={values.followUp ?? []}
         onChange={v => onChange('followUp', v)}
       />
 
       <ObservationBox
+        label={`Q${n}.c. 觀察／補充記錄`}
         value={values.observation}
         onChange={v => onChange('observation', v)}
       />

@@ -14,9 +14,11 @@ export const FEELINGS_QUESTIONS = [
     text: 'Q1a. 你嚟到童亮館嗰陣覺得點呀？',
     followUpKey: 'q1b',
     followUpQid: '144',
+    followUpLabel: 'Q1b. 跟進問題',
     followUpOptions: ['係乜嘢令到你開心/唔開心？（根據幼兒上一題的回答提問）'],
     observationKey: 'q1c',
     observationQid: '105',
+    observationLabel: 'Q1c. 觀察／補充記錄',
   },
   {
     key: 'q2a',
@@ -24,9 +26,11 @@ export const FEELINGS_QUESTIONS = [
     text: 'Q2a. 你鍾唔鍾意喺童亮館同同學仔一齊玩？',
     followUpKey: 'q2b',
     followUpQid: '148',
+    followUpLabel: 'Q2b. 跟進問題（請按次序提問以下兩條問題）',
     followUpOptions: ['同朋友喺呢度玩嘅時候，邊樣嘢最好玩？', '你仲想喺呢度同朋友玩啲咩新遊戲？'],
     observationKey: 'q2c',
     observationQid: '106',
+    observationLabel: 'Q2c. 觀察／補充記錄',
   },
   {
     key: 'q3a',
@@ -34,9 +38,11 @@ export const FEELINGS_QUESTIONS = [
     text: 'Q3a. 你鍾唔鍾意童亮館入面啲玩具同設施？',
     followUpKey: 'q3b',
     followUpQid: '149',
+    followUpLabel: 'Q3b. 跟進問題（請按次序提問以下兩條問題）',
     followUpOptions: ['點解你鐘意/唔鐘意玩嗰個玩具/設施？', '你希望童亮館有啲咩玩？'],
     observationKey: 'q3c',
     observationQid: '112',
+    observationLabel: 'Q3c. 觀察／補充記錄',
   },
   {
     key: 'q4a',
@@ -44,9 +50,11 @@ export const FEELINGS_QUESTIONS = [
     text: 'Q4a. 你鍾唔鍾意參加童亮館嘅活動？',
     followUpKey: 'q4b',
     followUpQid: '150',
+    followUpLabel: 'Q4b. 跟進問題（請按次序提問以下兩條問題）',
     followUpOptions: ['點解你鐘意/唔鐘意嗰啲活動？', '你覺得最好玩嘅活動係咩？'],
     observationKey: 'q4c',
     observationQid: '116',
+    observationLabel: 'Q4c. 觀察／補充記錄',
   },
   {
     key: 'q5a',
@@ -56,12 +64,14 @@ export const FEELINGS_QUESTIONS = [
     checkboxOptions: ['安全', '不安全'],
     followUpKey: 'q5b',
     followUpQid: '151',
+    followUpLabel: 'Q5b. 跟進問題',
     followUpOptions: [
       '（若幼兒回答不安全）點解令你覺得唔安全？',
       '（若幼兒回答安全）有冇啲乜嘢令你感到安全？',
     ],
     observationKey: 'q5c',
     observationQid: '120',
+    observationLabel: 'Q5c. 觀察／補充記錄',
   },
   {
     key: 'q6a',
@@ -71,12 +81,14 @@ export const FEELINGS_QUESTIONS = [
     checkboxOptions: ['有', '沒有'],
     followUpKey: 'q6b',
     followUpQid: '152',
+    followUpLabel: 'Q6b. 跟進問題（請按次序提問以下兩條問題）',
     followUpOptions: [
       '（若幼兒回答係否定）係發生乜嘢事？/你嗰陣需要乜嘢幫助？',
       '（若幼兒回答係肯定）佢哋係點樣幫助你架？',
     ],
     observationKey: 'q6c',
     observationQid: '124',
+    observationLabel: 'Q6c. 觀察／補充記錄',
   },
 ]
 

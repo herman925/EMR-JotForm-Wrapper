@@ -301,12 +301,13 @@ export default function App() {
                         />
                       )}
                       <FollowUpCheckbox
-                        label="跟進問題"
+                        label={q.followUpLabel}
                         options={q.followUpOptions}
                         values={feelingsValues[q.followUpKey] ?? []}
                         onChange={v => setFeelingsValues(p => ({ ...p, [q.followUpKey]: v }))}
                       />
                       <ObservationBox
+                        label={q.observationLabel}
                         value={feelingsValues[q.observationKey]}
                         onChange={v => setFeelingsValues(p => ({ ...p, [q.observationKey]: v }))}
                       />
@@ -396,9 +397,9 @@ export default function App() {
                     onChange={v => setClosingValues(p => ({ ...p, asked: v }))}
                   />
                   <ObservationBox
+                    label="Q12b. 觀察／補充記錄"
                     value={closingValues.observation}
                     onChange={v => setClosingValues(p => ({ ...p, observation: v }))}
-                    placeholder="Q12b 觀察／補充記錄（選填）"
                   />
                 </div>
               </div>

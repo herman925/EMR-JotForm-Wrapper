@@ -1,7 +1,12 @@
 /** Optional observation / free-text textarea */
-export default function ObservationBox({ value, onChange, placeholder = '觀察／補充記錄（選填）' }) {
+export default function ObservationBox({ label, value, onChange, placeholder = '觀察／補充記錄（選填）' }) {
   return (
     <div className="mt-3">
+      {label && (
+        <p className="text-xs font-semibold text-slate-500 uppercase tracking-wide mb-1.5">
+          {label}
+        </p>
+      )}
       <textarea
         rows={2}
         value={value ?? ''}
