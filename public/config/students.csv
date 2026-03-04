@@ -1,0 +1,9 @@
+StudentID,SchoolID,ClassID,District
+St10001,S001,C-001-01,Kowloon City
+St10002,S001,C-001-01,Kowloon City
+St10003,S001,C-001-02,Kowloon City
+St10004,S002,C-002-01,Shatin
+St10005,S002,C-002-01,Shatin
+St10006,S120,C-120-01,Tuen Mun
+St10007,S120,C-120-01,Tuen Mun
+St10008,S120,C-120-02,Tuen Mun

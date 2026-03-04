@@ -20,7 +20,7 @@ export function useStudentLookup() {
 
     try {
       if (!_cache) {
-        _cache = await fetchCSV('/config/students_raw.csv')
+        _cache = await fetchCSV(import.meta.env.BASE_URL + 'config/students_raw.csv')
       }
 
       const row = _cache.find(

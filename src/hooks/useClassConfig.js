@@ -25,7 +25,7 @@ export function useClassConfig() {
 
     try {
       if (!_cache) {
-        _cache = await fetchCSV('/config/classes.csv')
+        _cache = await fetchCSV(BASE + 'config/classes.csv')
       }
 
       const row = _cache.find(

@@ -137,7 +137,7 @@ export default function App() {
       {/* Header */}
       <header className="bg-navy text-white px-4 pt-safe-top pb-3 sticky top-0 z-10 shadow-md">
         <div className="max-w-lg mx-auto flex items-center gap-3">
-          <img src="/assets/logos/KS.png" alt="KeySteps" className="h-8 w-8 object-contain" />
+          <img src={import.meta.env.BASE_URL + 'assets/logos/KS.png'} alt="KeySteps" className="h-8 w-8 object-contain" />
           <div className="flex-1 min-w-0">
             <h1 className="font-bold text-sm leading-tight">童亮館 – 事件記憶測試</h1>
             <p className="text-white/60 text-xs">Event-Based Memory Test · Round II</p>
