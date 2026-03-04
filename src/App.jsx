@@ -321,7 +321,7 @@ export default function App() {
                 </div>
                 <div className="space-y-4">
                   {FEELINGS_QUESTIONS.map(q => (
-                    <div key={q.key} className="bg-white rounded-2xl border border-slate-100 shadow-sm p-4 space-y-3">
+                    <div key={q.key} className="bg-white rounded-2xl border border-slate-200 shadow-md p-4 space-y-3">
                       {q.type === 'checkbox' ? (
                         <div>
                           <p className="text-sm font-bold text-navy mb-3">{q.text} <span className="text-pink">*</span></p>
