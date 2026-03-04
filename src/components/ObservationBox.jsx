@@ -3,7 +3,7 @@ export default function ObservationBox({ label, value, onChange, placeholder = '
   return (
     <div className="mt-3">
       {label && (
-        <p className="text-xs font-semibold text-slate-500 uppercase tracking-wide mb-1.5">
+        <p className="text-sm font-bold text-navy mb-1.5">
           {label}
         </p>
       )}

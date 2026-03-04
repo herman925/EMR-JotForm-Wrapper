@@ -65,7 +65,7 @@ function Tile({ img, index, isSelected, onClick }) {
         <img
           src={resolvedSrc}
           alt=""
-          className="w-full h-full object-contain"
+          className="w-full h-full object-cover object-top"
           draggable="false"
           onLoad={handleLoad}
           onError={handleError}
@@ -109,7 +109,7 @@ export default function ImagePicker({ images, selected, onSelect, question }) {
   return (
     <div>
       {question && (
-        <p className="text-sm font-medium text-slate-700 mb-3 leading-relaxed">
+        <p className="text-sm font-bold text-navy mb-3 leading-relaxed">
           {question} <span className="text-pink">*</span>
         </p>
       )}

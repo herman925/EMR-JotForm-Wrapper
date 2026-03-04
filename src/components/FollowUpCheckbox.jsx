@@ -9,7 +9,7 @@ export default function FollowUpCheckbox({ label, options, values = [], onChange
 
   return (
     <div className="mt-3">
-      <p className="text-xs font-semibold text-slate-500 uppercase tracking-wide mb-2">
+      <p className="text-sm font-bold text-navy mb-2">
         {label}
       </p>
       <div className="space-y-2">

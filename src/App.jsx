@@ -400,14 +400,14 @@ export default function App() {
                 {config?.blocks?.length ? (
                   <>
                     <p className="text-xs text-slate-400 mb-5">共 {config.blocks.length} 個主題</p>
-                    <div className="space-y-10">
+                    <div className="space-y-4">
                       {config.blocks.map(block => (
-                        <div key={block.index} className="pb-8 border-b border-slate-100 last:border-0">
+                        <div key={block.index} className="bg-white rounded-2xl border border-slate-200 shadow-md p-4">
                           <div className="flex items-center gap-2 mb-4">
                             <span className="w-7 h-7 rounded-full bg-navy text-white text-sm flex items-center justify-center font-bold shrink-0">
                               {block.index}
                             </span>
-                            <span className="text-xs text-slate-400 font-medium">主題 {block.index}</span>
+                            <span className="text-sm font-bold text-navy">主題 {block.index}</span>
                           </div>
                           <ImageBlock
                             block={block}
