@@ -130,8 +130,6 @@ export default function App() {
     setSection(SECTIONS.indexOf('done'))
   }
 
-  const sectionIndex = SECTIONS.indexOf(SECTIONS[section])
-
   return (
     <div className="min-h-screen bg-slate-50">
       {/* Header */}
@@ -241,7 +239,7 @@ export default function App() {
                     className="form-input"
                     value={memoryValues.q7 ?? ''}
                     onChange={e => setMemoryValues(p => ({ ...p, q7: e.target.value }))}
-                    placeholder="���：3次"
+                    placeholder="例：3次"
                   />
                 </div>
                 <div>
