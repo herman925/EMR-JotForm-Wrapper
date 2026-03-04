@@ -10,7 +10,7 @@ const EMOJIS = [
 export default function EmojiRating({ question, value, onChange, required }) {
   return (
     <div>
-      <p className="text-sm font-medium text-slate-700 mb-3 leading-relaxed">
+      <p className="text-sm font-bold text-navy mb-3 leading-relaxed">
         {question}
         {required && <span className="text-pink ml-1">*</span>}
       </p>

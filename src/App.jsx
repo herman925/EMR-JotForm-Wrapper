@@ -319,12 +319,12 @@ export default function App() {
                   <span className="badge bg-pink/10 text-pink">第一部分</span>
                   幼兒在童亮館的體驗
                 </div>
-                <div className="space-y-8">
+                <div className="space-y-4">
                   {FEELINGS_QUESTIONS.map(q => (
-                    <div key={q.key} className="pb-6 border-b border-slate-100 last:border-0 last:pb-0">
+                    <div key={q.key} className="bg-white rounded-2xl border border-slate-100 shadow-sm p-4 space-y-3">
                       {q.type === 'checkbox' ? (
                         <div>
-                          <p className="text-sm font-medium text-slate-700 mb-3">{q.text} <span className="text-pink">*</span></p>
+                          <p className="text-sm font-bold text-navy mb-3">{q.text} <span className="text-pink">*</span></p>
                           <FollowUpCheckbox
                             label=""
                             options={q.checkboxOptions}
