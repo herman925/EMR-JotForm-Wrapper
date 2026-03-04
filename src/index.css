@@ -16,40 +16,40 @@
 @layer components {
   /* Section card */
   .section-card {
-    @apply bg-white rounded-2xl shadow-sm border border-slate-100 p-6 mb-4;
+    @apply bg-white rounded-2xl shadow-sm border border-slate-100 p-4 sm:p-6 mb-4;
   }
 
   /* Section title */
   .section-title {
-    @apply text-navy font-bold text-lg mb-4 flex items-center gap-2;
+    @apply text-navy font-bold text-base sm:text-lg mb-4 flex items-center gap-2;
   }
 
   /* Form label */
   .form-label {
-    @apply block text-sm font-medium text-slate-600 mb-1;
+    @apply block text-sm font-medium text-slate-600 mb-1.5;
   }
 
-  /* Text input */
+  /* Text input — min 44 px tall for touch targets */
   .form-input {
-    @apply w-full rounded-xl border border-slate-200 px-4 py-2.5 text-sm
+    @apply w-full rounded-xl border border-slate-200 px-4 py-3 text-base sm:text-sm
            focus:outline-none focus:ring-2 focus:ring-orange/50 focus:border-orange
            transition-colors placeholder:text-slate-300;
   }
 
-  /* Primary button */
+  /* Primary button — min 48 px tall */
   .btn-primary {
-    @apply bg-orange hover:bg-orange/90 text-white font-semibold
-           rounded-xl px-6 py-3 transition-colors active:scale-95;
+    @apply bg-orange hover:bg-orange/90 active:bg-orange/80 text-white font-semibold
+           rounded-xl px-6 py-3.5 transition-colors active:scale-95 touch-manipulation;
   }
 
   /* Secondary button */
   .btn-secondary {
-    @apply bg-navy hover:bg-navy/90 text-white font-semibold
-           rounded-xl px-6 py-3 transition-colors active:scale-95;
+    @apply bg-navy hover:bg-navy/90 active:bg-navy/80 text-white font-semibold
+           rounded-xl px-6 py-3.5 transition-colors active:scale-95 touch-manipulation;
   }
 
   /* Pill badge */
   .badge {
-    @apply inline-flex items-center rounded-full px-3 py-0.5 text-xs font-medium;
+    @apply inline-flex items-center rounded-full px-3 py-1 text-xs font-medium;
   }
 }

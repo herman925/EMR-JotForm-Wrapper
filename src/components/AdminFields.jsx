@@ -43,8 +43,8 @@ export default function AdminFields({ student, values, onChange }) {
         </div>
 
         <div>
-          <label className="form-label">學生姓名</label>
-          <input type="text" className="form-input" placeholder="（可選）" {...field('studentNameOverride')} />
+          <label className="form-label">學生姓名 <span className="text-slate-400 font-normal">（可修改）</span></label>
+          <input type="text" className="form-input" placeholder="自動填入" {...field('studentNameOverride')} />
         </div>
       </div>
     </div>

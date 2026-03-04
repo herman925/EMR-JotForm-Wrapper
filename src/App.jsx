@@ -28,6 +28,7 @@ export default function App() {
   function handleStudentResolved({ student, config }) {
     setStudent(student)
     setConfig(config)
+    setAdminValues({ studentNameOverride: student.studentName ?? '' })
     setSection(1)
   }
 
@@ -114,9 +115,6 @@ export default function App() {
     setSection(DONE)
   }
 
-  // Helper: grey-out wrapper for sections not yet reached
-  const dim = (n) => section < n ? 'opacity-40 pointer-events-none select-none' : ''
-
   return (
     <div className="min-h-screen bg-slate-50">
       {/* Header */}
@@ -152,7 +150,7 @@ export default function App() {
         {section >= 1 && section < DONE && student && (
           <>
             {/* Section 1: Admin */}
-            <div className={dim(1)}>
+            <div>
               <AdminFields
                 student={student}
                 values={adminValues}
@@ -167,7 +165,7 @@ export default function App() {
             </div>
 
             {/* Section 2: Feelings Q1–Q6 */}
-            <div className={dim(2)}>
+            <div>
               <div className="section-card">
                 <div className="section-title">
                   <span className="badge bg-pink/10 text-pink">第一部分</span>
@@ -214,7 +212,7 @@ export default function App() {
             </div>
 
             {/* Section 3: Memory Q7–Q8 */}
-            <div className={dim(3)}>
+            <div>
               <div className="section-card">
                 <div className="section-title">
                   <span className="badge bg-yellow/20 text-slate-700">第二部分</span>
@@ -249,7 +247,7 @@ export default function App() {
             </div>
 
             {/* Section 4: Image blocks + closing */}
-            <div className={dim(4)}>
+            <div>
               <div className="section-card">
                 <div className="section-title">
                   <span className="badge bg-green/10 text-green">第三部分</span>

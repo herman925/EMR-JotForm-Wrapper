@@ -20,14 +20,14 @@ export default function EmojiRating({ question, value, onChange, required }) {
             key={opt.value}
             type="button"
             onClick={() => onChange(opt.value)}
-            className={`flex-1 flex flex-col items-center gap-1 p-2 rounded-xl border-2 transition-all active:scale-95
+            className={`flex-1 flex flex-col items-center gap-1 p-2 sm:p-3 rounded-xl border-2 transition-all active:scale-95 touch-manipulation min-h-[64px] sm:min-h-[72px]
               ${value === opt.value
                 ? `${opt.bg} border-current ${opt.text} ring-2 ${opt.ring} ring-offset-1`
                 : 'border-slate-100 hover:border-slate-200 hover:bg-slate-50'
               }`}
           >
-            <span className="text-2xl leading-none">{opt.emoji}</span>
-            <span className={`text-[9px] font-medium leading-tight text-center hidden sm:block
+            <span className="text-3xl leading-none">{opt.emoji}</span>
+            <span className={`text-[9px] font-medium leading-tight text-center
               ${value === opt.value ? opt.text : 'text-slate-400'}`}>
               {opt.label}
             </span>
