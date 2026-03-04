@@ -79,9 +79,11 @@ ClassID   → config/classes.csv → SessionID + Q1a…Q8h image filenames
 ```
 
 - Each class has up to **8 image question sets** (Q1–Q8)
-- Each question set has **2 batches** of 4 images = 8 slots total:
+- Each question set has **4 batches** of 4 images = 16 slots total:
   - **Batch 1 — Scene** (`a`–`d`): places/scenes; correct = `a`, distractors = `b`–`d`
   - **Batch 2 — Staff** (`e`–`h`): staff members; correct = `e`, distractors = `f`–`h`
+  - **Batch 3** (`i`–`l`): recognition set 3; correct = `i`, distractors = `j`–`l`
+  - **Batch 4** (`m`–`p`): recognition set 4; correct = `m`, distractors = `n`–`p`
 - Each batch is shown as a separate 2×2 image grid in the app
 - Display order is **shuffled client-side**; correct answer identity is kept in memory only
 - Non-Tuen Mun districts use Q1–Q6 only (6 question sets); Q7 and Q8 columns are left blank
@@ -102,11 +104,13 @@ One row per class. 66 columns total:
 
 `SchoolID` and `District` are intentionally omitted — they come from `students_raw.csv` and are already in memory before `classes.csv` is consulted.
 
-Each `Q{n}` group is one **question set** containing two **batches**:
-- `a`–`d` = scene batch (class-specific, correct = `a`)
-- `e`–`h` = staff batch (same people across classes per session, correct = `e`)
+Each `Q{n}` group is one **question set** containing four **batches**:
+- `a`–`d` = batch 1 / scene (class-specific, correct = `a`)
+- `e`–`h` = batch 2 / staff (same people across classes per session, correct = `e`)
+- `i`–`l` = batch 3 (class-specific, correct = `i`)
+- `m`–`p` = batch 4 (class-specific, correct = `m`)
 
-Image filenames: `{SessionID}_Q{n}{choice}.jpg` e.g. `KC-01_Q1a.jpg`
+Image filenames: `{SessionID}_Q{n}{choice}.jpg` e.g. `KC-01_Q1a.jpg`, `KC-01_Q1i.jpg`
 
 ## Image Assets
 
@@ -121,9 +125,9 @@ e.g. KC-01_Q1a.jpg  ← correct scene image for question set 1, session KC-01
 ```
 
 ### Total expected image files
-- 4 non-TM districts × 6 sessions × 6 question sets × 8 images = 1,152
-- Tuen Mun × 8 sessions × 8 question sets × 8 images = 512
-- **Total: 1,664 files**
+- 4 non-TM districts × 6 sessions × 6 question sets × 16 images = 2,304
+- Tuen Mun × 8 sessions × 8 question sets × 16 images = 1,024
+- **Total: 3,328 files**
 
 ### Dynamic loading flow
 1. Interviewer enters Student ID

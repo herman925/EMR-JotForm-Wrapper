@@ -3,41 +3,67 @@ import FollowUpCheckbox from './FollowUpCheckbox'
 import ObservationBox from './ObservationBox'
 
 /**
- * One image memory block — contains:
- *   - Q{n}.1 scene recognition (class-specific images)
- *   - Q{n}.2 staff recognition (shared images)
- *   - Optional follow-up checkbox + observation
+ * One image memory block — contains 4 batches of 2×2 image pickers:
+ *   batch1 (a–d): scene recognition — correct = a
+ *   batch2 (e–h): staff recognition — correct = e
+ *   batch3 (i–l): recognition set 3 — correct = i
+ *   batch4 (m–p): recognition set 4 — correct = m
+ * Each batch is shuffled independently on mount.
  *
  * Props:
- *   block        { index, scene: [{src,isCorrect}×4], staff: [{src,isCorrect}×4] }
- *   values       { sceneSelected, staffSelected, followUp: [], observation }
- *   onChange     (key, value) => void
+ *   block    { index, batch1, batch2, batch3, batch4 }  each [{src,isCorrect}×4]
+ *   values   { batch1Selected, batch1Correct, batch2Selected, batch2Correct,
+ *             batch3Selected, batch3Correct, batch4Selected, batch4Correct,
+ *             followUp: [], observation }
+ *   onChange (key, value) => void
  */
 export default function ImageBlock({ block, values = {}, onChange }) {
   const n = block.index
 
   return (
     <div className="space-y-6">
-      {/* Scene question */}
+      {/* Batch 1 — Scene */}
       <ImagePicker
-        images={block.scene}
-        selected={values.sceneSelected ?? null}
+        images={block.batch1}
+        selected={values.batch1Selected ?? null}
         onSelect={(src, isCorrect) => {
-          onChange('sceneSelected', src)
-          onChange('sceneCorrect', isCorrect)
+          onChange('batch1Selected', src)
+          onChange('batch1Correct', isCorrect)
         }}
         question={`Q${n}.1  你記唔記得以下邊個場景係你喺童亮館玩過嘅？`}
       />
 
-      {/* Staff question */}
+      {/* Batch 2 — Staff */}
       <ImagePicker
-        images={block.staff}
-        selected={values.staffSelected ?? null}
+        images={block.batch2}
+        selected={values.batch2Selected ?? null}
         onSelect={(src, isCorrect) => {
-          onChange('staffSelected', src)
-          onChange('staffCorrect', isCorrect)
+          onChange('batch2Selected', src)
+          onChange('batch2Correct', isCorrect)
         }}
         question={`Q${n}.2  你記唔記得嗰次同邊個姑娘/老師一齊玩？`}
+      />
+
+      {/* Batch 3 */}
+      <ImagePicker
+        images={block.batch3}
+        selected={values.batch3Selected ?? null}
+        onSelect={(src, isCorrect) => {
+          onChange('batch3Selected', src)
+          onChange('batch3Correct', isCorrect)
+        }}
+        question={`Q${n}.3  你記唔記得以下邊個係你喺童亮館見過嘅？`}
+      />
+
+      {/* Batch 4 */}
+      <ImagePicker
+        images={block.batch4}
+        selected={values.batch4Selected ?? null}
+        onSelect={(src, isCorrect) => {
+          onChange('batch4Selected', src)
+          onChange('batch4Correct', isCorrect)
+        }}
+        question={`Q${n}.4  你記唔記得以下邊個係你喺童亮館有關聯嘅？`}
       />
 
       {/* Follow-up */}

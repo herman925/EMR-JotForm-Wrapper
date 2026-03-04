@@ -11,16 +11,18 @@ Maps each class (`ClassID`) to its assigned session (`SessionID`) and lists the 
 
 ### Key concept: question sets and batches
 
-Each **question set** (Q1–Q8) contains **two batches** of images:
+Each **question set** (Q1–Q8) contains **four batches** of images:
 
 | Batch | Letters | Subject | Correct answer |
 |---|---|---|---|
 | Batch 1 — Scene | `a`, `b`, `c`, `d` | Places / scenes the child visited | `a` (correct), `b`–`d` (distractors) |
 | Batch 2 — Staff | `e`, `f`, `g`, `h` | Staff members the child met | `e` (correct), `f`–`h` (distractors) |
+| Batch 3 | `i`, `j`, `k`, `l` | Recognition set 3 (scenes / objects) | `i` (correct), `j`–`l` (distractors) |
+| Batch 4 | `m`, `n`, `o`, `p` | Recognition set 4 (scenes / objects) | `m` (correct), `n`–`p` (distractors) |
 
-So **1 question set = 2 batches = 8 image files** (`Q{n}a` through `Q{n}h`).
+So **1 question set = 4 batches = 16 image files** (`Q{n}a` through `Q{n}p`).
 
-> The app shows each batch as a separate 2×2 image grid. The child picks one image per batch. The display order is shuffled — the correct answer is never visually marked.
+> The app shows each batch as a separate 2×2 image grid. The child picks one image per batch. The display order is shuffled within each batch — the correct answer is never visually marked.
 
 ### Column structure
 
@@ -28,13 +30,13 @@ So **1 question set = 2 batches = 8 image files** (`Q{n}a` through `Q{n}h`).
 |---|---|---|---|
 | 1 | `ClassID` | `C-001-01` | Must match `Class ID 25/26` in `students_raw.csv` exactly |
 | 2 | `SessionID` | `KC-01` | Drives image filename prefix; shown in the app header |
-| 3–10 | `Q1a`–`Q1h` | `KC-01_Q1a.jpg` | Question set 1 — `a`–`d` = scene batch, `e`–`h` = staff batch |
-| 11–18 | `Q2a`–`Q2h` | `KC-01_Q2a.jpg` | Question set 2 |
+| 3–18 | `Q1a`–`Q1p` | `KC-01_Q1a.jpg` | Question set 1 — `a`–`d` = scene, `e`–`h` = staff, `i`–`l` = batch 3, `m`–`p` = batch 4 |
+| 19–34 | `Q2a`–`Q2p` | `KC-01_Q2a.jpg` | Question set 2 |
 | … | … | … | Repeat for Q3–Q6 for non-TM districts |
-| 51–58 | `Q7a`–`Q7h` | `TM-01_Q7a.jpg` | Tuen Mun only — leave blank for other districts |
-| 59–66 | `Q8a`–`Q8h` | `TM-01_Q8a.jpg` | Tuen Mun only — leave blank for other districts |
+| 99–114 | `Q7a`–`Q7p` | `TM-01_Q7a.jpg` | Tuen Mun only — leave blank for other districts |
+| 115–130 | `Q8a`–`Q8p` | `TM-01_Q8a.jpg` | Tuen Mun only — leave blank for other districts |
 
-**Total columns: 66** (`ClassID` + `SessionID` + 8 question sets × 8 images)
+**Total columns: 130** (`ClassID` + `SessionID` + 8 question sets × 16 images)
 
 ### Number of question sets per district
 
@@ -54,8 +56,8 @@ So **1 question set = 2 batches = 8 image files** (`Q{n}a` through `Q{n}h`).
 2. For each class row:
    - Set `ClassID` to match the value in `students_raw.csv` column `Class ID 25/26` exactly (e.g. `C-001-01`)
    - Set `SessionID` to the assigned session code (e.g. `KC-01`)
-   - For each question set `n` (1–6 for non-TM, 1–8 for TM), fill in 8 cells following the pattern `{SessionID}_Q{n}{letter}.jpg`
-   - Leave Q7 and Q8 cells **blank** for non-TM classes
+   - For each question set `n` (1–6 for non-TM, 1–8 for TM), fill in 16 cells following the pattern `{SessionID}_Q{n}{letter}.jpg` for letters `a`–`p`
+   - Leave Q7 and Q8 cells **blank** for non-TM classes (32 empty cells)
 3. When done, save as **CSV UTF-8** (in Excel: File → Save As → CSV UTF-8 (comma delimited)).
 4. Make sure the filename remains `classes.csv` and the file is saved back to `public/config/`.
 
@@ -63,15 +65,15 @@ So **1 question set = 2 batches = 8 image files** (`Q{n}a` through `Q{n}h`).
 
 ### What it looks like in Excel (example — non-TM class)
 
-| ClassID | SessionID | Q1a | Q1b | Q1c | Q1d | Q1e | Q1f | Q1g | Q1h | … | Q6h | Q7a | … | Q8h |
-|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
-| C-001-01 | KC-01 | KC-01_Q1a.jpg | KC-01_Q1b.jpg | KC-01_Q1c.jpg | KC-01_Q1d.jpg | KC-01_Q1e.jpg | KC-01_Q1f.jpg | KC-01_Q1g.jpg | KC-01_Q1h.jpg | … | KC-01_Q6h.jpg | *(empty)* | … | *(empty)* |
+| ClassID | SessionID | Q1a | Q1b | Q1c | Q1d | Q1e | Q1f | Q1g | Q1h | Q1i | Q1j | Q1k | Q1l | Q1m | Q1n | Q1o | Q1p | … | Q6p | Q7a | … | Q8p |
+|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
+| C-001-01 | KC-01 | KC-01_Q1a.jpg | … | KC-01_Q1d.jpg | KC-01_Q1e.jpg | … | KC-01_Q1h.jpg | KC-01_Q1i.jpg | … | KC-01_Q1l.jpg | KC-01_Q1m.jpg | … | KC-01_Q1p.jpg | … | KC-01_Q6p.jpg | *(empty)* | … | *(empty)* |
 
 ### What it looks like in Excel (example — Tuen Mun class)
 
-| ClassID | SessionID | Q1a | Q1b | … | Q6h | Q7a | Q7b | … | Q7h | Q8a | Q8b | … | Q8h |
+| ClassID | SessionID | Q1a | … | Q1p | Q2a | … | Q6p | Q7a | … | Q7p | Q8a | … | Q8p |
 |---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
-| C-120-01 | TM-01 | TM-01_Q1a.jpg | TM-01_Q1b.jpg | … | TM-01_Q6h.jpg | TM-01_Q7a.jpg | TM-01_Q7b.jpg | … | TM-01_Q7h.jpg | TM-01_Q8a.jpg | TM-01_Q8b.jpg | … | TM-01_Q8h.jpg |
+| C-120-01 | TM-01 | TM-01_Q1a.jpg | … | TM-01_Q1p.jpg | TM-01_Q2a.jpg | … | TM-01_Q6p.jpg | TM-01_Q7a.jpg | … | TM-01_Q7p.jpg | TM-01_Q8a.jpg | … | TM-01_Q8p.jpg |
 
 ---
 
@@ -87,7 +89,7 @@ So **1 question set = 2 batches = 8 image files** (`Q{n}a` through `Q{n}h`).
 |---|---|---|
 | `{SessionID}` | Session prefix from `classes.csv` | `KC-01`, `TM-08`, `SSP-03` |
 | `Q{n}` | Question set number | `Q1`–`Q6` (non-TM), `Q1`–`Q8` (TM) |
-| `{choice}` | Image slot within the set | `a`–`d` (scene batch), `e`–`h` (staff batch) |
+| `{choice}` | Image slot within the set | `a`–`d` (batch 1/scene), `e`–`h` (batch 2/staff), `i`–`l` (batch 3), `m`–`p` (batch 4) |
 
 ### Examples
 
@@ -95,14 +97,22 @@ Question set 1, session KC-01:
 
 | Filename | Batch | Role |
 |---|---|---|
-| `KC-01_Q1a.jpg` | Scene | ✅ Correct scene |
-| `KC-01_Q1b.jpg` | Scene | Distractor |
-| `KC-01_Q1c.jpg` | Scene | Distractor |
-| `KC-01_Q1d.jpg` | Scene | Distractor |
-| `KC-01_Q1e.jpg` | Staff | ✅ Correct staff |
-| `KC-01_Q1f.jpg` | Staff | Distractor |
-| `KC-01_Q1g.jpg` | Staff | Distractor |
-| `KC-01_Q1h.jpg` | Staff | Distractor |
+| `KC-01_Q1a.jpg` | Batch 1 — Scene | ✅ Correct scene |
+| `KC-01_Q1b.jpg` | Batch 1 — Scene | Distractor |
+| `KC-01_Q1c.jpg` | Batch 1 — Scene | Distractor |
+| `KC-01_Q1d.jpg` | Batch 1 — Scene | Distractor |
+| `KC-01_Q1e.jpg` | Batch 2 — Staff | ✅ Correct staff |
+| `KC-01_Q1f.jpg` | Batch 2 — Staff | Distractor |
+| `KC-01_Q1g.jpg` | Batch 2 — Staff | Distractor |
+| `KC-01_Q1h.jpg` | Batch 2 — Staff | Distractor |
+| `KC-01_Q1i.jpg` | Batch 3 | ✅ Correct |
+| `KC-01_Q1j.jpg` | Batch 3 | Distractor |
+| `KC-01_Q1k.jpg` | Batch 3 | Distractor |
+| `KC-01_Q1l.jpg` | Batch 3 | Distractor |
+| `KC-01_Q1m.jpg` | Batch 4 | ✅ Correct |
+| `KC-01_Q1n.jpg` | Batch 4 | Distractor |
+| `KC-01_Q1o.jpg` | Batch 4 | Distractor |
+| `KC-01_Q1p.jpg` | Batch 4 | Distractor |
 
 The same pattern repeats for every question set and every session (e.g. `TM-08_Q8a.jpg` through `TM-08_Q8h.jpg` for Tuen Mun session 8, question set 8).
 
@@ -110,9 +120,9 @@ The same pattern repeats for every question set and every session (e.g. `TM-08_Q
 
 | Group | Calculation | Count |
 |---|---|---|
-| Non-TM (KC, SSP, ST, YL) | 4 districts × 6 sessions × 6 question sets × 8 images | 1,152 |
-| Tuen Mun | 1 district × 8 sessions × 8 question sets × 8 images | 512 |
-| **Total** | | **1,664** |
+| Non-TM (KC, SSP, ST, YL) | 4 districts × 6 sessions × 6 question sets × 16 images | 2,304 |
+| Tuen Mun | 1 district × 8 sessions × 8 question sets × 16 images | 1,024 |
+| **Total** | | **3,328** |
 
 ### How to prepare the images
 

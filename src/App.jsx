@@ -123,10 +123,14 @@ export default function App() {
 
     for (const block of config?.blocks ?? []) {
       const v = imageValues[block.index] ?? {}
-      const sceneQid = IMAGE_BLOCK_QIDS.scene[block.index]
-      const staffQid = IMAGE_BLOCK_QIDS.staff[block.index]
-      if (sceneQid && v.sceneSelected) answers[sceneQid] = v.sceneSelected
-      if (staffQid && v.staffSelected) answers[staffQid] = v.staffSelected
+      const b1qid = IMAGE_BLOCK_QIDS.batch1[block.index]
+      const b2qid = IMAGE_BLOCK_QIDS.batch2[block.index]
+      const b3qid = IMAGE_BLOCK_QIDS.batch3[block.index]
+      const b4qid = IMAGE_BLOCK_QIDS.batch4[block.index]
+      if (b1qid && v.batch1Selected) answers[b1qid] = v.batch1Selected
+      if (b2qid && v.batch2Selected) answers[b2qid] = v.batch2Selected
+      if (b3qid && v.batch3Selected) answers[b3qid] = v.batch3Selected
+      if (b4qid && v.batch4Selected) answers[b4qid] = v.batch4Selected
     }
 
     const payload = {

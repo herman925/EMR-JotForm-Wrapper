@@ -118,11 +118,16 @@ export const ADMIN_QIDS = {
 }
 
 // Image block qid mappings — TODO: update once new JotForm is published
-// These will map Q{n}.1 scene and Q{n}.2 staff answers
+// Each question set has 4 batches:
+//   batch1 = scene (cols a–d, correct=a)     Q{n}.1
+//   batch2 = staff (cols e–h, correct=e)     Q{n}.2
+//   batch3 = set 3 (cols i–l, correct=i)     Q{n}.3
+//   batch4 = set 4 (cols m–p, correct=m)     Q{n}.4
 export const IMAGE_BLOCK_QIDS = {
-  // scene: { 1: 'xxx', 2: 'xxx', ... }
-  scene: { 1: null, 2: null, 3: null, 4: null, 5: null, 6: null, 7: null, 8: null },
-  staff: { 1: null, 2: null, 3: null, 4: null, 5: null, 6: null, 7: null, 8: null },
+  batch1: { 1: null, 2: null, 3: null, 4: null, 5: null, 6: null, 7: null, 8: null },
+  batch2: { 1: null, 2: null, 3: null, 4: null, 5: null, 6: null, 7: null, 8: null },
+  batch3: { 1: null, 2: null, 3: null, 4: null, 5: null, 6: null, 7: null, 8: null },
+  batch4: { 1: null, 2: null, 3: null, 4: null, 5: null, 6: null, 7: null, 8: null },
 }
 
 export const SECTION_LABELS = ['基本資料', '感受', '記憶', '圖片', '完成']
