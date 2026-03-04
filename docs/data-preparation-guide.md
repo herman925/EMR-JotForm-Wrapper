@@ -30,11 +30,11 @@ So **1 question set = 4 batches = 16 image files** (`Q{n}a` through `Q{n}p`).
 |---|---|---|---|
 | 1 | `ClassID` | `C-001-01` | Must match `Class ID 25/26` in `students_raw.csv` exactly |
 | 2 | `SessionID` | `KC-01` | Drives image filename prefix; shown in the app header |
-| 3–18 | `Q1a`–`Q1p` | `KC-01_Q1a.jpg` | Question set 1 — `a`–`d` = scene, `e`–`h` = staff, `i`–`l` = batch 3, `m`–`p` = batch 4 |
-| 19–34 | `Q2a`–`Q2p` | `KC-01_Q2a.jpg` | Question set 2 |
+| 3–18 | `Q1a`–`Q1p` | `KC-01_Q1a` | Question set 1 — `a`–`d` = scene, `e`–`h` = staff, `i`–`l` = batch 3, `m`–`p` = batch 4 |
+| 19–34 | `Q2a`–`Q2p` | `KC-01_Q2a` | Question set 2 |
 | … | … | … | Repeat for Q3–Q6 for non-TM districts |
-| 99–114 | `Q7a`–`Q7p` | `TM-01_Q7a.jpg` | Tuen Mun only — leave blank for other districts |
-| 115–130 | `Q8a`–`Q8p` | `TM-01_Q8a.jpg` | Tuen Mun only — leave blank for other districts |
+| 99–114 | `Q7a`–`Q7p` | `TM-01_Q7a` | Tuen Mun only — leave blank for other districts |
+| 115–130 | `Q8a`–`Q8p` | `TM-01_Q8a` | Tuen Mun only — leave blank for other districts |
 
 **Total columns: 130** (`ClassID` + `SessionID` + 8 question sets × 16 images)
 
@@ -56,7 +56,7 @@ So **1 question set = 4 batches = 16 image files** (`Q{n}a` through `Q{n}p`).
 2. For each class row:
    - Set `ClassID` to match the value in `students_raw.csv` column `Class ID 25/26` exactly (e.g. `C-001-01`)
    - Set `SessionID` to the assigned session code (e.g. `KC-01`)
-   - For each question set `n` (1–6 for non-TM, 1–8 for TM), fill in 16 cells following the pattern `{SessionID}_Q{n}{letter}.jpg` for letters `a`–`p`
+   - For each question set `n` (1–6 for non-TM, 1–8 for TM), fill in 16 cells following the pattern `{SessionID}_Q{n}{letter}` (no extension) for letters `a`–`p`
    - Leave Q7 and Q8 cells **blank** for non-TM classes (32 empty cells)
 3. When done, save as **CSV UTF-8** (in Excel: File → Save As → CSV UTF-8 (comma delimited)).
 4. Make sure the filename remains `classes.csv` and the file is saved back to `public/config/`.
@@ -67,13 +67,13 @@ So **1 question set = 4 batches = 16 image files** (`Q{n}a` through `Q{n}p`).
 
 | ClassID | SessionID | Q1a | Q1b | Q1c | Q1d | Q1e | Q1f | Q1g | Q1h | Q1i | Q1j | Q1k | Q1l | Q1m | Q1n | Q1o | Q1p | … | Q6p | Q7a | … | Q8p |
 |---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
-| C-001-01 | KC-01 | KC-01_Q1a.jpg | … | KC-01_Q1d.jpg | KC-01_Q1e.jpg | … | KC-01_Q1h.jpg | KC-01_Q1i.jpg | … | KC-01_Q1l.jpg | KC-01_Q1m.jpg | … | KC-01_Q1p.jpg | … | KC-01_Q6p.jpg | *(empty)* | … | *(empty)* |
+| C-001-01 | KC-01 | KC-01_Q1a | … | KC-01_Q1d | KC-01_Q1e | … | KC-01_Q1h | KC-01_Q1i | … | KC-01_Q1l | KC-01_Q1m | … | KC-01_Q1p | … | KC-01_Q6p | *(empty)* | … | *(empty)* |
 
 ### What it looks like in Excel (example — Tuen Mun class)
 
 | ClassID | SessionID | Q1a | … | Q1p | Q2a | … | Q6p | Q7a | … | Q7p | Q8a | … | Q8p |
 |---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
-| C-120-01 | TM-01 | TM-01_Q1a.jpg | … | TM-01_Q1p.jpg | TM-01_Q2a.jpg | … | TM-01_Q6p.jpg | TM-01_Q7a.jpg | … | TM-01_Q7p.jpg | TM-01_Q8a.jpg | … | TM-01_Q8p.jpg |
+| C-120-01 | TM-01 | TM-01_Q1a | … | TM-01_Q1p | TM-01_Q2a | … | TM-01_Q6p | TM-01_Q7a | … | TM-01_Q7p | TM-01_Q8a | … | TM-01_Q8p |
 
 ---
 
@@ -82,8 +82,11 @@ So **1 question set = 4 batches = 16 image files** (`Q{n}a` through `Q{n}p`).
 ### Naming convention
 
 ```
-{SessionID}_Q{n}{choice}.jpg
+{SessionID}_Q{n}{choice}.{ext}
 ```
+
+The extension may be `.jpg`, `.JPG`, `.jpeg`, `.png`, `.PNG`, or `.webp` — the app tries each in that order.
+The **CSV stores only the bare stem** (no extension); the app discovers the extension at runtime.
 
 | Part | Meaning | Example values |
 |---|---|---|
@@ -126,7 +129,7 @@ The same pattern repeats for every question set and every session (e.g. `TM-08_Q
 
 ### How to prepare the images
 
-1. Rename all image files to match the naming convention above exactly (case-sensitive).
+1. Rename all image files to match the naming convention above exactly — extension may be `.jpg`, `.JPG`, `.jpeg`, `.png`, `.PNG`, or `.webp`.
 2. Place all files in a **single flat folder** — no subfolders.
 3. Copy the folder contents to `public/assets/images/`.
 4. Scene images (`a`–`d`) are class-specific — different sessions may have different scenes.

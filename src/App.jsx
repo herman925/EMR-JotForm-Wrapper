@@ -117,11 +117,12 @@ export default function App() {
     //   arr()  → Array   (control_checkbox — must use indexed submission[qid][i] notation)
     const val = (v)  => v && v !== 'N/A' ? v : '9999'
     const arr = (a)  => a?.length ? [...a]  : []
-    // Image picker: store the actual filename letter (a–d batch1, e–h batch2,
-    // i–l batch3, m–p batch4). N/A or unselected = '9999'.
+    // Image picker: extract the filename letter (a–p) from the selected src.
+    // src is now a bare stem (no extension), e.g. "/base/assets/images/KC-01_Q1a"
+    // Extension suffix tolerated for safety. N/A or unselected → '9999'.
     const imageChar = (sel) => {
       if (!sel || sel === 'N/A') return '9999'
-      const m = sel.match(/_Q\d+([a-p])\.jpg$/i)
+      const m = sel.match(/_Q\d+([a-p])(?:\.[^./]*)?$/i)
       return m ? m[1] : '9999'
     }
 

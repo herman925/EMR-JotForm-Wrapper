@@ -38,9 +38,10 @@ const API_KEY  = env.VITE_JOTFORM_API_KEY
 
 // ── Sample payload — mirrors exactly what App.jsx builds ──────────────────────
 // imageChar helper (same logic as App.jsx) — extracts the filename letter (a–p) or '9999'
+// Extension is optional: stems like 'KC-01_Q1a' and paths like 'KC-01_Q1a.jpg' both work.
 const imageChar = (filename) => {
   if (!filename || filename === 'N/A') return '9999'
-  const m = filename.match(/_Q\d+([a-p])\.jpg$/i)
+  const m = filename.match(/_Q\d+([a-p])(?:\.[^./]*)?$/i)
   return m ? m[1] : '9999'
 }
 const val        = (v)            => (v && v !== 'N/A')      ? v       : '9999'

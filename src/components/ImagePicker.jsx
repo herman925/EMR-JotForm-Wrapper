@@ -1,5 +1,8 @@
 import { useMemo, useState } from 'react'
 
+/** Extensions tried in order before giving up and showing a placeholder */
+const EXTENSIONS = ['jpg', 'JPG', 'jpeg', 'JPEG', 'png', 'PNG', 'webp']
+
 /** Fisher-Yates shuffle — stable per mount via useMemo */
 function shuffle(arr) {
   const a = [...arr]
@@ -23,11 +26,25 @@ const SLOT_COLORS = [
  * the src is missing / fails to load.
  */
 function Tile({ img, index, isSelected, onClick }) {
-  const [broken, setBroken] = useState(false)
-  const showPlaceholder = !img.src || broken
+  // extIdx: which extension we're currently trying (-1 = use src as-is / already has ext)
+  const [extIdx, setExtIdx] = useState(0)
+  const [allBroken, setAllBroken] = useState(false)
+
   const slot = SLOT_COLORS[index % 4]
-  // Derive a short label from the filename, e.g. "KC-01_Q1a"
-  const label = img.src ? img.src.split('/').pop().replace(/\.[^.]+$/, '') : '圖片'
+  const label = img.src ? img.src.split('/').pop() : '圖片'
+
+  // Build the URL to actually request: append the current candidate extension
+  const resolvedSrc = img.src ? `${img.src}.${EXTENSIONS[extIdx]}` : null
+  const showPlaceholder = !img.src || allBroken
+
+  function handleError() {
+    const next = extIdx + 1
+    if (next < EXTENSIONS.length) {
+      setExtIdx(next)   // try the next extension
+    } else {
+      setAllBroken(true) // give up — show placeholder
+    }
+  }
 
   return (
     <button
@@ -38,14 +55,14 @@ function Tile({ img, index, isSelected, onClick }) {
           ? 'border-orange shadow-lg shadow-orange/20'
           : 'border-transparent hover:border-orange/30'}`}
     >
-      {/* Real image */}
-      {img.src && !broken && (
+      {/* Real image — src cycles through EXTENSIONS until one loads */}
+      {resolvedSrc && !allBroken && (
         <img
-          src={img.src}
+          src={resolvedSrc}
           alt=""
           className="w-full h-full object-cover"
           draggable="false"
-          onError={() => setBroken(true)}
+          onError={handleError}
         />
       )}
 

@@ -110,7 +110,7 @@ Each `Q{n}` group is one **question set** containing four **batches**:
 - `i`–`l` = batch 3 (class-specific, correct = `i`)
 - `m`–`p` = batch 4 (class-specific, correct = `m`)
 
-Image filenames: `{SessionID}_Q{n}{choice}.jpg` e.g. `KC-01_Q1a.jpg`, `KC-01_Q1i.jpg`
+Image filenames: `{SessionID}_Q{n}{choice}` (no extension) e.g. `KC-01_Q1a`, `KC-01_Q1i`
 
 ## Image Assets
 
@@ -118,11 +118,14 @@ All images in a **single flat folder**: `assets/images/`
 
 ### Naming convention
 ```
-{SessionID}_Q{n}{choice}.jpg
+{SessionID}_Q{n}{choice}.{ext}
 e.g. KC-01_Q1a.jpg  ← correct scene image for question set 1, session KC-01
-     KC-01_Q1e.jpg  ← correct staff image for question set 1, session KC-01
-     TM-08_Q8h.jpg  ← distractor staff image for question set 8, session TM-08
+     KC-01_Q1e.png  ← correct staff image (PNG accepted)
+     TM-08_Q8h.JPG  ← distractor staff image (uppercase extension accepted)
 ```
+
+Extensions may vary (`.jpg`, `.JPG`, `.jpeg`, `.png`, `.PNG`, `.webp`). The app tries
+each extension in order until one loads; the CSV stores only the bare stem (no extension).
 
 ### Total expected image files
 - 4 non-TM districts × 6 sessions × 6 question sets × 16 images = 2,304

@@ -43,8 +43,13 @@ export function useClassConfig() {
         const sceneA = row[`Q${n}a`]
         if (!sceneA) break // no more blocks for this class
 
-        const toImgPath = (filename) =>
-          filename ? `${BASE}assets/images/${filename}` : null
+        // Strip any extension the CSV might still carry (e.g. .jpg, .JPG, .png)
+        // so the stored path is always a bare stem — ImagePicker tries extensions.
+        const toImgPath = (filename) => {
+          if (!filename) return null
+          const stem = filename.replace(/\.[^.]+$/, '')
+          return `${BASE}assets/images/${stem}`
+        }
 
         const batch1 = [
           { src: toImgPath(row[`Q${n}a`]), isCorrect: true  },
