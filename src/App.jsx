@@ -57,7 +57,10 @@ export default function App() {
     setStudent(student)
     setConfig(config)
     setSchoolClasses(schoolClasses ?? [])
-    setAdminValues({ studentNameOverride: student.studentName ?? '' })
+    setAdminValues({
+      studentNameOverride: student.studentName ?? '',
+      interviewDate: new Date().toLocaleDateString('en-CA'), // YYYY-MM-DD for <input type="date">
+    })
     setSurveyReady(false)
     setAdminTouched(false)
     setSection(1)
