@@ -37,12 +37,17 @@ function Tile({ img, index, isSelected, onClick }) {
   const resolvedSrc = img.src ? `${img.src}.${EXTENSIONS[extIdx]}` : null
   const showPlaceholder = !img.src || allBroken
 
+  function handleLoad(e) {
+    console.log(`%c[Image ✓] ${e.target.src}`, 'color:#8dbe50')
+  }
+
   function handleError() {
     const next = extIdx + 1
     if (next < EXTENSIONS.length) {
       setExtIdx(next)   // try the next extension
     } else {
-      setAllBroken(true) // give up — show placeholder
+      setAllBroken(true)
+      console.warn(`[Image ✗] all extensions failed for stem: ${img.src}`)
     }
   }
 
@@ -62,6 +67,7 @@ function Tile({ img, index, isSelected, onClick }) {
           alt=""
           className="w-full h-full object-cover"
           draggable="false"
+          onLoad={handleLoad}
           onError={handleError}
         />
       )}

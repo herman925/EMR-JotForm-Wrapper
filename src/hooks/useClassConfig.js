@@ -89,11 +89,36 @@ export function useClassConfig() {
         })
       }
 
-      return {
+      const result = {
         classId:   row['ClassID'],
         sessionId: row['SessionID'],
         blocks,
       }
+
+      // ── Dev console: print image list as a table ──────────────────────
+      const rows = []
+      for (const block of blocks) {
+        const batches = { batch1: 'a–d (scene)', batch2: 'e–h (staff)', batch3: 'i–l', batch4: 'm–p' }
+        for (const [bk, label] of Object.entries(batches)) {
+          block[bk].forEach((img, i) => {
+            rows.push({
+              'Q-set':    `Q${block.index}`,
+              Batch:      label,
+              Slot:       i,
+              Correct:    img.isCorrect ? '★' : '',
+              'Stem (no ext)': img.src ?? '(null)',
+            })
+          })
+        }
+      }
+      console.groupCollapsed(
+        `%c[ClassConfig] ${result.classId} · ${result.sessionId} — ${blocks.length} set(s), ${rows.length} images`,
+        'color:#2b3990;font-weight:bold'
+      )
+      console.table(rows)
+      console.groupEnd()
+
+      return result
     } catch (err) {
       setError('載入班別設定時出錯：' + err.message)
       return null
