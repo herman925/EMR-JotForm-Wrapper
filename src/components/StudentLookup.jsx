@@ -76,7 +76,7 @@ export default function StudentLookup({ onResolved }) {
           <div className="flex flex-wrap gap-2 mb-4">
             <InfoChip label="學生" value={foundStudent.studentName} color="navy" />
             <InfoChip label="學校" value={foundStudent.schoolName}  color="orange" />
-            <InfoChip label="班別" value={foundStudent.classId}     color="yellow" />
+            <InfoChip label="班別" value={foundStudent.className ? `${foundStudent.className} (${foundStudent.classId})` : foundStudent.classId} color="yellow" />
             <InfoChip label="地區" value={foundStudent.district}    color="green" />
           </div>
 

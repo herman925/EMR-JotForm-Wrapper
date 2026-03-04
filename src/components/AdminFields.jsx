@@ -42,30 +42,32 @@ export default function AdminFields({ student, values, onChange, schoolClasses =
 
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
 
-        {/* Class ID — dropdown filtered to student's school */}
+        {/* Class — always a dropdown (pre-selected = student's class); options show "{Class Name} ({Class ID})" */}
         <div className="sm:col-span-2">
           <label className="form-label">
-            班別編號 *
+            班別 *
             {schoolClasses.length > 0 && (
               <span className="text-slate-400 font-normal ml-1">（{schoolClasses.length} 個班別）</span>
             )}
           </label>
-          {schoolClasses.length > 1 ? (
+          {schoolClasses.length > 0 ? (
             <select
               className="form-input"
               value={activeClassId}
               onChange={handleClassChange}
             >
-              {schoolClasses.map(cid => (
-                <option key={cid} value={cid}>{cid}</option>
+              {schoolClasses.map(({ classId, className }) => (
+                <option key={classId} value={classId}>
+                  {className ? `${className} (${classId})` : classId}
+                </option>
               ))}
             </select>
           ) : (
             <input
               type="text"
-              className="form-input bg-slate-50 text-slate-500"
+              className="form-input"
               value={activeClassId}
-              readOnly
+              onChange={handleClassChange}
             />
           )}
         </div>

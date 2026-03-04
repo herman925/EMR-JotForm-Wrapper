@@ -36,6 +36,7 @@ export function useStudentLookup() {
         studentId:   row['Student ID'],
         studentName: row['Full Name'],
         classId:     row['Class ID 25/26'],
+        className:   row['Class Name 25/26'],
         schoolId:    row['School ID'],
         schoolName:  row['School Name'],
         district:    row['District Cleaned'],
@@ -48,17 +49,20 @@ export function useStudentLookup() {
     }
   }, [])
 
-  /** Return sorted unique Class ID 25/26 values for a given School ID (requires prior lookup call) */
+  /** Return sorted unique classes (classId + className) for a given School ID */
   const getSchoolClasses = useCallback((schoolId) => {
     if (!_cache || !schoolId) return []
-    const seen = new Set()
+    const seen = new Map()
     for (const row of _cache) {
       if (row['School ID']?.trim() === schoolId.trim()) {
-        const cid = row['Class ID 25/26']?.trim()
-        if (cid) seen.add(cid)
+        const cid  = row['Class ID 25/26']?.trim()
+        const name = row['Class Name 25/26']?.trim() ?? ''
+        if (cid && !seen.has(cid)) seen.set(cid, name)
       }
     }
-    return [...seen].sort()
+    return [...seen.entries()]
+      .map(([classId, className]) => ({ classId, className }))
+      .sort((a, b) => a.classId.localeCompare(b.classId))
   }, [])
 
   return { lookup, loading, error, getSchoolClasses }
