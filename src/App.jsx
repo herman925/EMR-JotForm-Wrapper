@@ -112,19 +112,25 @@ export default function App() {
     answers[ADMIN_QIDS.studentClass]    = adminValues.classIdOverride || student.classId
     answers[ADMIN_QIDS.district]        = student.district
 
-    // Helper: treat missing or explicit N/A as the sentinel value 9999
-    const val  = (v) => v && v !== 'N/A' ? v : '9999'
-    const list = (a) => a?.length ? a.join(', ') : '9999'
-    // Image picker: submit JotForm item label (A = correct, B = wrong)
-    // NOT the local src URL — JotForm widget expects the label string
+    // Helpers for JotForm field types:
+    //   val()  → string  (radio, textbox, textarea, image widget)
+    //   arr()  → Array   (control_checkbox — must use indexed submission[qid][i] notation)
+    const val = (v)  => v && v !== 'N/A' ? v : '9999'
+    const arr = (a)  => a?.length ? [...a]  : ['9999']
+    // Image picker: JotForm label, not URL. correct=A, wrong=B, N/A or empty=9999
     const imageLabel = (sel, correct) => {
       if (!sel || sel === 'N/A') return '9999'
       return correct ? 'A' : 'B'
     }
 
     for (const q of FEELINGS_QUESTIONS) {
-      answers[q.qid]            = val(feelingsValues[q.key])
-      answers[q.followUpQid]    = list(feelingsValues[q.followUpKey])
+      // Q5a/Q6a are control_checkbox (single-select); Q1–Q4 are control_radio
+      if (q.type === 'checkbox') {
+        answers[q.qid] = [val(feelingsValues[q.key])]
+      } else {
+        answers[q.qid] = val(feelingsValues[q.key])
+      }
+      answers[q.followUpQid]    = arr(feelingsValues[q.followUpKey])   // always Array
       answers[q.observationQid] = val(feelingsValues[q.observationKey])
     }
 
@@ -143,7 +149,7 @@ export default function App() {
       if (b4qid) answers[b4qid] = imageLabel(v.batch4Selected, v.batch4Correct)
     }
 
-    answers[CLOSING_QIDS.followUp]    = list(closingValues.asked)
+    answers[CLOSING_QIDS.followUp]    = arr(closingValues.asked)   // control_checkbox
     answers[CLOSING_QIDS.observation] = val(closingValues.observation)
 
     const payload = {

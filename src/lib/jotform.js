@@ -14,12 +14,27 @@ const API_KEY  = import.meta.env.VITE_JOTFORM_API_KEY
 
 /**
  * Build URLSearchParams from a flat { qid: value } map.
- * @param {Object} answers - { '204': 'Teacher Name', '207': '2026-03-04', ... }
+ *
+ * JotForm field types:
+ *   control_radio / textbox / textarea → submission[qid] = value  (string)
+ *   control_checkbox                   → submission[qid][0] = v0, [1] = v1, …  (Array)
+ *   control_widget (image picker)      → submission[qid] = label  (string: A/B/9999)
+ *
+ * Pass an Array for any checkbox field; strings for everything else.
+ *
+ * @param {Object} answers - { '204': 'Teacher Name', '211': ['安全'], '144': ['q1'] }
  */
 function buildPayload(answers) {
   const params = new URLSearchParams()
   for (const [qid, value] of Object.entries(answers)) {
-    if (value !== null && value !== undefined && value !== '') {
+    if (Array.isArray(value)) {
+      // control_checkbox: each selected option gets its own indexed key
+      value.forEach((v, i) => {
+        if (v !== null && v !== undefined && v !== '') {
+          params.append(`submission[${qid}][${i}]`, v)
+        }
+      })
+    } else if (value !== null && value !== undefined && value !== '') {
       params.append(`submission[${qid}]`, value)
     }
   }

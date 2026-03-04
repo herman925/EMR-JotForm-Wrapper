@@ -40,7 +40,8 @@ const API_KEY  = env.VITE_JOTFORM_API_KEY
 // imageLabel helper (same logic as App.jsx)
 const imageLabel = (sel, correct) => (!sel || sel === 'N/A') ? '9999' : (correct ? 'A' : 'B')
 const val        = (v)            => (v && v !== 'N/A')      ? v       : '9999'
-const list       = (a)            => a?.length               ? a.join(', ') : '9999'
+const arr        = (a)            => a?.length               ? [...a]  : ['9999']
+// NOTE: arr() returns an Array — buildPayload handles it with submission[qid][i] notation
 
 // Simulate a completely filled-in form for student St10001 / class C-001-01
 const answers = {
@@ -55,16 +56,21 @@ const answers = {
   '213': 'Kowloon City',               // district
 
   // ── Feelings Q1–Q6 (qids from FEELINGS_QUESTIONS) ────────────────────────
-  // Q1a: emoji radio — one of 😭 ☹️ 😐 🙂 😃
-  '16':  val('🙂'),                    // Q1a selected
-  '144': list(['係乜嘢令到你開心？']),  // Q1b follow-up checked
-  '105': val('No observation'),         // Q1c observation
+  // Q1a–Q4a: control_radio  → plain string
+  // Q5a, Q6a: control_checkbox (single-select) → Array with one element
+  // QXb follow-ups: control_checkbox (multi-select) → Array
+  '16':  val('🙂'),                               // Q1a radio
+  '144': arr(['係乜嘢令到你開心？']),               // Q1b checkbox  → [option]
+  '105': val('No observation'),                   // Q1c textarea
 
-  '24':  val('😃'),      '148': list([]),  '106': val(''),
-  '25':  val('🙂'),      '149': list([]),  '112': val(''),
-  '26':  val('😐'),      '150': list([]),  '116': val(''),
-  '211': val('安全'),    '151': list([]),  '120': val(''),
-  '209': val('有'),      '152': list([]),  '124': val(''),
+  '24':  val('😃'),  '148': arr([]),    '106': val(''),
+  '25':  val('🙂'),  '149': arr([]),    '112': val(''),
+  '26':  val('😐'),  '150': arr([]),    '116': val(''),
+
+  // Q5a: control_checkbox, options: 安全|不安全
+  '211': [val('安全')],   '151': arr([]),  '120': val(''),
+  // Q6a: control_checkbox, options: 有|沒有
+  '209': [val('有')],     '152': arr([]),  '124': val(''),
 
   // ── Memory Q7–Q8 ──────────────────────────────────────────────────────────
   '187': val('2'),                     // Q7 textbox
@@ -78,17 +84,23 @@ const answers = {
   '217': imageLabel('KC-01_Q1m.jpg', true),   // batch4 → 'A' (correct)
 
   // ── Closing ───────────────────────────────────────────────────────────────
-  '160': list(['你仲想唔想再嚟童亮館？', '點解你想再嚟？']),  // Q11a follow-up
+  // Q11a (160): control_checkbox → Array
+  '160': arr(['你仲想唔想再嚟童亮館？', '點解你想再嚟？']),  // Q11a follow-up
   '43':  val('Child seemed tired but cooperative'),          // Q11b observation
 }
 
-// ── Build URLSearchParams (same as jotform.js buildPayload) ──────────────────
+// ── Build URLSearchParams (mirrors jotform.js buildPayload) ─────────────────
 function buildPayload(answers) {
   const params = new URLSearchParams()
   for (const [qid, value] of Object.entries(answers)) {
-    // jotform.js currently filters out null/undefined/'' — we now always pass
-    // '9999' for blanks from App.jsx, so this guard is just a safety net
-    if (value !== null && value !== undefined && value !== '') {
+    if (Array.isArray(value)) {
+      // control_checkbox: indexed notation submission[qid][0], [1], ...
+      value.forEach((v, i) => {
+        if (v !== null && v !== undefined && v !== '') {
+          params.append(`submission[${qid}][${i}]`, v)
+        }
+      })
+    } else if (value !== null && value !== undefined && value !== '') {
       params.append(`submission[${qid}]`, value)
     }
   }
@@ -124,12 +136,13 @@ for (const [qid, v] of Object.entries(answers)) {
 console.log('\n=== SUBMISSION DRY-RUN ===\n')
 console.log(`Endpoint : POST ${BASE_URL}/form/${FORM_ID}/submissions`)
 console.log(`Auth     : apiKey=${API_KEY ? API_KEY.slice(0,6) + '...' : 'NOT SET'}\n`)
-console.log('Payload fields:')
-for (const [qid, v] of Object.entries(answers)) {
-  const display = String(v).length > 60 ? String(v).slice(0, 57) + '...' : v
-  console.log(`  submission[${qid.padEnd(4)}] = ${display}`)
+console.log('\nPayload fields (as sent to API):')
+const builtParams = buildPayload(answers)
+for (const [k, v] of builtParams.entries()) {
+  const display = v.length > 60 ? v.slice(0, 57) + '...' : v
+  console.log(`  ${k.padEnd(28)} = ${display}`)
 }
-console.log(`\nTotal fields: ${Object.keys(answers).length}`)
+console.log(`\nTotal URLSearchParams entries: ${[...builtParams.entries()].length}`)
 
 if (issues.length) {
   console.log('\n⚠ ISSUES FOUND:')
