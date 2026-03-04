@@ -135,11 +135,11 @@ export const DISTRICT_MAP = {
 //
 // Round I clone schema has 2 sets (Q9, Q10). Sets 3–8 are TODO until Round II form.
 export const IMAGE_BLOCK_QIDS = {
-  //        set:  1     2     3     4     5     6     7     8
-  batch1: { 1: '35',  2: '161', 3: null, 4: null, 5: null, 6: null, 7: null, 8: null },
-  batch2: { 1: '38',  2: '164', 3: null, 4: null, 5: null, 6: null, 7: null, 8: null },
-  batch3: { 1: '36',  2: '167', 3: null, 4: null, 5: null, 6: null, 7: null, 8: null },
-  batch4: { 1: '217', 2: '220', 3: null, 4: null, 5: null, 6: null, 7: null, 8: null },
+  //        set:  1      2      3     4     5     6     7     8
+  batch1: { 1: '226', 2: '229', 3: null, 4: null, 5: null, 6: null, 7: null, 8: null },
+  batch2: { 1: '225', 2: '230', 3: null, 4: null, 5: null, 6: null, 7: null, 8: null },
+  batch3: { 1: '227', 2: '231', 3: null, 4: null, 5: null, 6: null, 7: null, 8: null },
+  batch4: { 1: '228', 2: '232', 3: null, 4: null, 5: null, 6: null, 7: null, 8: null },
 }
 
 // Per-batch follow-up checkbox + observation textarea qids (keyed by set index)

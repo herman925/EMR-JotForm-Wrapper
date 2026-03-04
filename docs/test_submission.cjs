@@ -78,11 +78,11 @@ const answers = {
   '127': val('玩過積木同扮演遊戲'),     // Q8 textarea
 
   // ── Image blocks (sets 1 + 2 only — sets 3–8 have null qids, skipped) ─────
-  // Set 1: correct for batch1+batch4, wrong for batch2, N/A for batch3
-  '35':  imageLabel('KC-01_Q1a.jpg', true),   // batch1 → 'A' (correct)
-  '38':  imageLabel('KC-01_Q1f.jpg', false),  // batch2 → 'B' (wrong)
-  '36':  imageLabel('N/A', false),             // batch3 → '9999' (N/A)
-  '217': imageLabel('KC-01_Q1m.jpg', true),   // batch4 → 'A' (correct)
+  // Set 1 (Q9): correct for batch1+batch4, wrong for batch2, N/A for batch3
+  '226': imageLabel('KC-01_Q1a.jpg', true),   // Q9.1a batch1 → 'A' (correct)
+  '225': imageLabel('KC-01_Q1f.jpg', false),  // Q9.2a batch2 → 'B' (wrong)
+  '227': imageLabel('N/A', false),             // Q9.3a batch3 → '9999' (N/A)
+  '228': imageLabel('KC-01_Q1m.jpg', true),   // Q9.4a batch4 → 'A' (correct)
   // Set 1 per-batch follow-up + observation (IMAGE_BLOCK_BATCH_QIDS[1])
   '153': arr(['可唔可以講下你喺呢個場景度做過啲咩？']),  // Q9.1b batch1 follow-up
   '157': val('Student recalled climbing the wall'),    // Q9.1c batch1 observation
@@ -91,11 +91,11 @@ const answers = {
   '159': val('Hesitated briefly'),                    // Q9.3b batch3 observation
   '218': val(''),                                     // Q9.4b batch4 observation (blank)
 
-  // Set 2: all N/A
-  '161': imageLabel(null, false),   // batch1
-  '164': imageLabel(null, false),   // batch2
-  '167': imageLabel(null, false),   // batch3
-  '220': imageLabel(null, false),   // batch4
+  // Set 2 (Q10): all N/A
+  '229': imageLabel(null, false),   // Q10.1a batch1
+  '230': imageLabel(null, false),   // Q10.2a batch2
+  '231': imageLabel(null, false),   // Q10.3a batch3
+  '232': imageLabel(null, false),   // Q10.4a batch4
   // Set 2 per-batch follow-up + observation (IMAGE_BLOCK_BATCH_QIDS[2])
   '202': arr([]),   // Q10.1b batch1 follow-up (not asked)
   '163': val(''),  // Q10.1c batch1 observation
@@ -144,10 +144,10 @@ for (const [qid, v] of Object.entries(answers)) {
 const REQUIRED = ['204','212','207','100','58','186','201','213',
   '16','144','105','24','148','106','25','149','112','26','150','116',
   '211','151','120','209','152','124','187','127',
-  // Image set 1 pickers + per-batch follow-up/observation
-  '35','38','36','217','153','157','155','158','159','218',
-  // Image set 2 pickers + per-batch follow-up/observation
-  '161','164','167','220','202','163','165','166','169','221',
+  // Image set 1 (Q9) pickers + per-batch follow-up/observation
+  '226','225','227','228','153','157','155','158','159','218',
+  // Image set 2 (Q10) pickers + per-batch follow-up/observation
+  '229','230','231','232','202','163','165','166','169','221',
   // Closing
   '160','43']
 for (const qid of REQUIRED) {
