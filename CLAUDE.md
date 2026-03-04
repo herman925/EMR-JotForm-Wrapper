@@ -65,11 +65,11 @@ Prefix all with `VITE_` for Vite. Set as GitHub Secrets for CI/CD. See `.env.exa
 
 - **Form ID:** `260617738275465`
 - **Owner:** `keystepseduhk`
-- **Title:** Clone of Kowloon City Hub – Event-based Memory Test Recording Form (Round I)
-- **Status:** ENABLED (to be replaced with Round II form)
+- **Title:** Event-based Memory Test Recording Form (Round II)
+- **Status:** ENABLED
 - **Full schema:** `docs/jotform-schema.json`
 - **API reference:** `docs/jotform-api.md`
-- **Note:** qid mappings in `src/constants/questions.js` are marked `TODO` — update once the new Round II JotForm is published
+- **qid mappings:** confirmed and live in `src/constants/questions.js`; image result fields (Q9/Q10 batches) are plain `control_textbox` — the wrapper owns the image-picker UI, JotForm just stores the `A`/`B`/`9999` result string
 
 ## Data Model
 
@@ -149,7 +149,8 @@ src/
     FollowUpCheckbox.jsx      ← Follow-up prompt checkboxes
     ObservationBox.jsx        ← Free-text observation textarea
     ImagePicker.jsx           ← 2×2 shuffled image grid; placeholder tiles when images missing
-    ImageBlock.jsx            ← One question set: scene batch picker + staff batch picker + follow-up
+    ImageBlock.jsx            ← One question set: 4 batches, each with its own ImagePicker;
+                                 batch1+2 have FollowUpCheckbox; all 4 batches have ObservationBox
     ProgressBar.jsx           ← Scroll-driven progress; line through circle centres
   hooks/
     useStudentLookup.js       ← Fetch + parse students_raw.csv; lookup + getSchoolClasses()
@@ -159,8 +160,13 @@ src/
     jotform.js                ← POST to JotForm API
     supabase.js               ← Supabase backup (JSON blob)
   constants/
-    questions.js              ← Question text (Cantonese), qid mappings (TODO: update)
-                                 SECTION_LABELS = ['基本資料', '感受', '記憶', '圖片', '完成']
+    questions.js              ← Question text (Cantonese), confirmed qid mappings.
+                                 Exports: FEELINGS_QUESTIONS, MEMORY_QUESTIONS, CLOSING_QUESTIONS,
+                                 ADMIN_QIDS, IMAGE_BLOCK_QIDS (batch1–4 × sets 1–8),
+                                 IMAGE_BLOCK_BATCH_QIDS (per-set per-batch follow-up+obs qids),
+                                 IMAGE_BATCH_FOLLOWUP_OPTIONS (exact JotForm option text),
+                                 DISTRICT_MAP (English→Chinese for dropdown qid 213),
+                                 CLOSING_QIDS, SECTION_LABELS
 ```
 
 ## Survey Flow
@@ -221,7 +227,54 @@ create table responses (
 -- TODO: migrate to structured columns once form schema is finalised
 ```
 
-## JotForm API Key Endpoints
+## JotForm Submission Details
+
+### Field encoding rules
+
+| JotForm type | Submission format | Notes |
+|---|---|---|
+| `control_radio` | `submission[qid] = value` | Emoji string or `9999` |
+| `control_textbox` / `control_textarea` | `submission[qid] = value` | Plain string or `9999` |
+| `control_checkbox` | `submission[qid][0] = v0`, `[1] = v1` | Empty array → field omitted (not `9999`) |
+| `control_dropdown` | `submission[qid] = exactOptionText` | Must match JotForm option exactly |
+| Image result textbox | `submission[qid] = A \| B \| 9999` | `A`=correct, `B`=wrong, `9999`=N/A or skipped |
+
+### Confirmed qid mappings (Round II form `260617738275465`)
+
+**Admin fields**
+
+| Key | qid | Type |
+|---|---|---|
+| `interviewerName` | `204` | textbox |
+| `phase` | `212` | dropdown |
+| `interviewDate` | `207` | datetime |
+| `studentId` | `100` | widget |
+| `studentName` | `58` | textbox |
+| `schoolName` | `186` | textbox |
+| `studentClass` | `201` | textbox |
+| `district` | `213` | dropdown (九龍城\|沙田\|深水埗\|元朗\|屯門) |
+
+**Image result fields (plain textboxes — app owns the picker UI)**
+
+| | Set 1 (Q9) | Set 2 (Q10) |
+|---|---|---|
+| batch1 scene | `226` | `229` |
+| batch2 staff | `225` | `230` |
+| batch3 | `227` | `231` |
+| batch4 | `228` | `232` |
+
+**Per-batch follow-up + observation qids**
+
+| | Set 1 | Set 2 |
+|---|---|---|
+| `b1FollowUp` (checkbox) | `153` | `202` |
+| `b1Obs` (textarea) | `157` | `163` |
+| `b2FollowUp` (checkbox) | `155` | `165` |
+| `b2Obs` (textarea) | `158` | `166` |
+| `b3Obs` (textarea) | `159` | `169` |
+| `b4Obs` (textarea) | `218` | `221` |
+
+## JotForm API Endpoints
 
 | Method | Endpoint | Purpose |
 |---|---|---|
@@ -242,8 +295,8 @@ Authentication: `apiKey` query param or `APIKEY` HTTP header.
 
 ## Pending Items
 
-- [ ] Publish new Round II JotForm form → update qids in `src/constants/questions.js`
-- [ ] Populate `public/config/classes.csv` with real class-to-session mappings (columns: `ClassID`, `SessionID`, `Q1a`…`Q8h`)
+- [ ] Populate `public/config/classes.csv` with real class-to-session mappings
 - [ ] Add all image files to `public/assets/images/`
-- [ ] Create Supabase `responses` table (SQL above)
+- [ ] Create Supabase `responses` table (SQL in SUPABASE section above)
 - [ ] Set GitHub Secrets for all env vars
+- [ ] Wire qids for image sets 3–8 in `IMAGE_BLOCK_QIDS` and `IMAGE_BLOCK_BATCH_QIDS` once TM sessions are confirmed

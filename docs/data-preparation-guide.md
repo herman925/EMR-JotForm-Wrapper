@@ -153,7 +153,7 @@ The form is named **"Event-based Memory Test Recording Form (Round II)"**. Below
 | `studentName` | 學生姓名 | Short text | `58` |
 | `schoolName` | 學校名稱 | Short text (hidden / auto-fill) | `186` |
 | `studentClass` | 班別編號 | Short text (hidden / auto-fill) | `201` |
-| `district` | 地區 | Short text (hidden / auto-fill) | `213` |
+| `district` | 所屬地區 | Dropdown (九龍城 / 沙田 / 深水埗 / 元朗 / 屯門) | `213` |
 
 ### Part 1 — Feelings (Q1–Q6)
 
@@ -179,20 +179,35 @@ Each question has three sub-fields: **(a)** rating or checkbox, **(b)** follow-u
 
 ### Part 3 — Image Question Sets (Q9 onwards)
 
-Each question set produces **two JotForm questions** — one per batch. The app submits the **filename** of the selected image.
+The wrapper app owns the image-picker UI entirely. JotForm stores only the **result** of each pick as a plain short text (`A` = correct, `B` = wrong, `9999` = N/A / skipped).
 
-| Question set | Scene batch question (suggested label) | Staff batch question (suggested label) | Round II qid (scene) | Round II qid (staff) |
-|---|---|---|---|---|
-| Set 1 | Q9.1 你記唔記得去過呢個地方？（揀一張） | Q9.2 你記唔記得見過呢個人？（揀一張） | TODO | TODO |
-| Set 2 | Q10.1 … | Q10.2 … | TODO | TODO |
-| Set 3 | Q11.1 … | Q11.2 … | TODO | TODO |
-| Set 4 | Q12.1 … | Q12.2 … | TODO | TODO |
-| Set 5 | Q13.1 … | Q13.2 … | TODO | TODO |
-| Set 6 | Q14.1 … | Q14.2 … | TODO | TODO |
-| Set 7 (TM only) | Q15.1 … | Q15.2 … | TODO | TODO |
-| Set 8 (TM only) | Q16.1 … | Q16.2 … | TODO | TODO |
+Each question set maps to **10 JotForm fields**: 4 image result textboxes + 2 follow-up checkboxes + 4 observation textareas.
 
-> Once the Round II form is published, fill in the `TODO` qids in `src/constants/questions.js` under `IMAGE_BLOCK_QIDS.scene` and `IMAGE_BLOCK_QIDS.staff`.
+#### Image result fields (one per batch)
+
+| Batch | Set 1 (Q9) qid | Set 2 (Q10) qid | Stored value |
+|---|---|---|---|
+| Batch 1 — Scene | `226` | `229` | `A` / `B` / `9999` |
+| Batch 2 — Staff | `225` | `230` | `A` / `B` / `9999` |
+| Batch 3 | `227` | `231` | `A` / `B` / `9999` |
+| Batch 4 | `228` | `232` | `A` / `B` / `9999` |
+
+#### Per-batch follow-up + observation fields
+
+| Sub-field | Set 1 qid | Set 2 qid | JotForm type |
+|---|---|---|---|
+| Q9.1b / Q10.1b — batch1 follow-up | `153` | `202` | checkbox |
+| Q9.1c / Q10.1c — batch1 observation | `157` | `163` | textarea |
+| Q9.2b / Q10.2b — batch2 follow-up | `155` | `165` | checkbox |
+| Q9.2c / Q10.2c — batch2 observation | `158` | `166` | textarea |
+| Q9.3b / Q10.3b — batch3 observation | `159` | `169` | textarea |
+| Q9.4b / Q10.4b — batch4 observation | `218` | `221` | textarea |
+
+**Follow-up checkbox option text** (must match JotForm options exactly):
+- Batch 1: `可唔可以講下你喺呢個場景度做過啲咩？`
+- Batch 2: `你記得你哋一起做咗啲咩嗎？` and `嗰陣你覺得點呀？`
+
+> Sets 3–8 qids are `null` in `IMAGE_BLOCK_QIDS` and `IMAGE_BLOCK_BATCH_QIDS` — those entries are skipped at submission time. They will be filled in once Tuen Mun sessions are confirmed.
 
 ### Part 4 — Closing Questions (final section)
 
@@ -210,15 +225,25 @@ These are prompted verbally by the interviewer. The app records which questions 
 
 ---
 
-## 4. Updating qid Mappings After Form Publication
+## 4. Updating qid Mappings After Form Changes
 
-When the Round II JotForm is published:
+If the JotForm schema changes (e.g. new questions added for sets 3–8):
 
-1. Open the form in JotForm and go to **Form Builder → Settings → API**.
-2. Or call `GET https://api.jotform.com/form/{FORM_ID}/questions?apiKey={YOUR_KEY}` and inspect the response.
-3. Update `src/constants/questions.js`:
-   - `ADMIN_QIDS` — verify all 8 admin field qids
-   - `FEELINGS_QUESTIONS` — update `qid`, `followUpQid`, `observationQid` for Q1–Q6
-   - `MEMORY_QUESTIONS` — update `q7.qid` and `q8.qid`
-   - `IMAGE_BLOCK_QIDS.scene` and `IMAGE_BLOCK_QIDS.staff` — fill in all 16 TODO values
-4. Also update `VITE_JOTFORM_FORM_ID` in `.env` and in GitHub Secrets.
+1. Fetch the live schema:
+   ```
+   curl "https://api.jotform.com/form/{FORM_ID}/questions?apiKey={YOUR_KEY}" | node -e \
+     "const d=[];process.stdin.on('data',c=>d.push(c));process.stdin.on('end',()=>{
+       const j=JSON.parse(d.join(''));
+       Object.entries(j.content).sort((a,b)=>+a[0]-+b[0]).forEach(([qid,q])=>console.log(qid,q.type?.padEnd(22),q.text?.slice(0,60)));
+     });"
+   ```
+2. Update `src/constants/questions.js`:
+   - `ADMIN_QIDS` — verify the 8 admin field qids
+   - `FEELINGS_QUESTIONS` — `qid`, `followUpQid`, `observationQid` for Q1–Q6
+   - `MEMORY_QUESTIONS` — `q7.qid`, `q8.qid`
+   - `IMAGE_BLOCK_QIDS` — `batch1`/`batch2`/`batch3`/`batch4` keyed by set index (1–8)
+   - `IMAGE_BLOCK_BATCH_QIDS` — `b1FollowUp`, `b1Obs`, `b2FollowUp`, `b2Obs`, `b3Obs`, `b4Obs` per set
+   - `IMAGE_BATCH_FOLLOWUP_OPTIONS` — update if any checkbox option text changes
+   - `DISTRICT_MAP` — update if dropdown options change
+3. Run `node docs/test_submission.cjs --submit` to validate, then delete the test submission.
+4. Also update `VITE_JOTFORM_FORM_ID` in `.env` and GitHub Secrets if the form ID changes.
