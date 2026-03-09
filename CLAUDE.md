@@ -290,11 +290,23 @@ create table responses (
 
 Authentication: `apiKey` query param or `APIKEY` HTTP header.
 
+## Repository Relationship
+
+- `upstream` = `herman925/EMR-JotForm-Wrapper` → source repo / canonical history
+- `origin` = `KeySteps-EdUHK/EMR-JotForm-Wrapper` → mirror/deployment repo for GitHub Pages
+- When changes should exist in both repos, push to both remotes after the local branch is ready
+- Typical sync flow: pull/fetch from `upstream`, verify locally, then push to `upstream` and `origin`
+
 ## Deployment
 
-- Push to `main` → GitHub Actions builds and deploys to GitHub Pages
-- Secrets required: all 5 `VITE_*` env vars set in repo Settings → Secrets
-- `vite.config.js` base path: `/EMR-JotForm-Wrapper/` (capital F — matches GitHub repo name exactly)
+- `origin/main` is the GitHub Pages deployment target
+- Source repo remains `upstream/main`; Pages-facing changes that should persist across future syncs should be committed upstream as well
+- When a change should land in both repos, push both explicitly:
+  - `git push upstream main`
+  - `git push origin main`
+- GitHub Pages must use `Source: GitHub Actions`
+- Secrets required on the deployment repo: all 5 `VITE_*` values set in repo `Settings` → `Secrets and variables` → `Actions` → `Repository secrets`
+- `vite.config.js` base path is dynamic and should follow the repo being built; do not hardcode a single repo name again
 
 ## Pending Items
 
