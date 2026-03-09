@@ -2,6 +2,12 @@ name: Sync Upstream to Origin
 
 on:
   workflow_dispatch:
+    inputs:
+      force_reset:
+        description: Overwrite origin/main with upstream/main if history diverged
+        required: false
+        default: false
+        type: boolean
   schedule:
     - cron: '17 * * * *'
 
@@ -32,7 +38,7 @@ jobs:
           git remote add upstream https://github.com/herman925/EMR-JotForm-Wrapper.git
           git fetch upstream main
 
-      - name: Fast-forward origin main from upstream main
+      - name: Sync origin main from upstream main
         run: |
           CURRENT_SHA=$(git rev-parse HEAD)
           UPSTREAM_SHA=$(git rev-parse upstream/main)
@@ -52,6 +58,13 @@ jobs:
             exit 0
           fi
 
+          if [ "${{ inputs.force_reset }}" = "true" ]; then
+            git reset --hard upstream/main
+            git push --force-with-lease origin HEAD:main
+            echo "Origin/main was force-reset to upstream/main."
+            exit 0
+          fi
+
           echo "Origin/main has diverged from upstream/main. Manual intervention required."
-          echo "Review the branch history and sync manually instead of force-pushing."
+          echo "Run this workflow manually with force_reset=true for a one-time realignment."
           exit 1
