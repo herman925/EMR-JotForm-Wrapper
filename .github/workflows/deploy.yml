@@ -34,6 +34,7 @@ jobs:
       - name: Build
         run: npm run build
         env:
+          BASE_PATH: /${{ github.event.repository.name }}/
           VITE_JOTFORM_BASE_URL: ${{ secrets.VITE_JOTFORM_BASE_URL }}
           VITE_JOTFORM_FORM_ID:  ${{ secrets.VITE_JOTFORM_FORM_ID }}
           VITE_JOTFORM_API_KEY:  ${{ secrets.VITE_JOTFORM_API_KEY }}
