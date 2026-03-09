@@ -1,0 +1,57 @@
+name: Sync Upstream to Origin
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '17 * * * *'
+
+permissions:
+  contents: write
+
+concurrency:
+  group: sync-upstream
+  cancel-in-progress: true
+
+jobs:
+  sync:
+    if: github.repository == 'KeySteps-EdUHK/EMR-JotForm-Wrapper'
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Configure git
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+      - name: Fetch upstream main
+        run: |
+          git remote add upstream https://github.com/herman925/EMR-JotForm-Wrapper.git
+          git fetch upstream main
+
+      - name: Fast-forward origin main from upstream main
+        run: |
+          CURRENT_SHA=$(git rev-parse HEAD)
+          UPSTREAM_SHA=$(git rev-parse upstream/main)
+
+          echo "Current origin/main:  $CURRENT_SHA"
+          echo "Latest upstream/main: $UPSTREAM_SHA"
+
+          if [ "$CURRENT_SHA" = "$UPSTREAM_SHA" ]; then
+            echo "Origin is already in sync with upstream."
+            exit 0
+          fi
+
+          if git merge-base --is-ancestor HEAD upstream/main; then
+            git merge --ff-only upstream/main
+            git push origin HEAD:main
+            echo "Origin/main fast-forwarded to upstream/main."
+            exit 0
+          fi
+
+          echo "Origin/main has diverged from upstream/main. Manual intervention required."
+          echo "Review the branch history and sync manually instead of force-pushing."
+          exit 1

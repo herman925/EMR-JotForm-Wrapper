@@ -304,6 +304,8 @@ Authentication: `apiKey` query param or `APIKEY` HTTP header.
 - When a change should land in both repos, push both explicitly:
   - `git push upstream main`
   - `git push origin main`
+- `origin` can also run `.github/workflows/sync-upstream.yml` to fast-forward from `herman925/main` on a schedule or via manual dispatch
+- The sync workflow is intentionally fast-forward-only; if `origin/main` diverges from `upstream/main`, it should fail and be resolved manually rather than force-overwrite history
 - GitHub Pages must use `Source: GitHub Actions`
 - Secrets required on the deployment repo: all 5 `VITE_*` values set in repo `Settings` → `Secrets and variables` → `Actions` → `Repository secrets`
 - `vite.config.js` base path is dynamic and should follow the repo being built; do not hardcode a single repo name again
