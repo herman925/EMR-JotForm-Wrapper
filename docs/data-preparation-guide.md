@@ -230,17 +230,25 @@ These are prompted verbally by the interviewer. The app records which questions 
 
 ## 4. Updating qid Mappings After Form Changes
 
+Important distinction for Q9/Q10 `a` fields:
+
+- In the wrapper UI, `Q9.1a` to `Q10.4a` are image-picker questions.
+- In the live JotForm schema, those same questions are stored as plain `control_textbox` fields.
+- The wrapper renders the image-picker experience itself and submits the selected letter into JotForm textbox storage qids `225` to `232`.
+- Therefore `docs/jotform-schema.json` should show these as textboxes, while the app behavior should still treat them as image-pickers.
+
 If the JotForm schema changes (e.g. new questions added for sets 3–8):
 
-1. Fetch the live schema:
+1. Refresh and validate against the live form:
    ```
-   curl "https://api.jotform.com/form/{FORM_ID}/questions?apiKey={YOUR_KEY}" | node -e \
-     "const d=[];process.stdin.on('data',c=>d.push(c));process.stdin.on('end',()=>{
-       const j=JSON.parse(d.join(''));
-       Object.entries(j.content).sort((a,b)=>+a[0]-+b[0]).forEach(([qid,q])=>console.log(qid,q.type?.padEnd(22),q.text?.slice(0,60)));
-     });"
+   npm run jotform:refresh
    ```
-2. Update `src/constants/questions.js`:
+   This does three things in one step:
+   - fetches `GET /form/{id}/questions` from the live JotForm form
+   - overwrites `docs/jotform-schema.json`
+   - runs the wrapper coverage audit from `docs/check_schema.js`
+
+2. Review the audit output and update `src/constants/questions.js` if needed:
    - `ADMIN_QIDS` — verify the 8 admin field qids
    - `FEELINGS_QUESTIONS` — `qid`, `followUpQid`, `observationQid` for Q1–Q6
    - `MEMORY_QUESTIONS` — `q7.qid`, `q8.qid`
@@ -248,5 +256,16 @@ If the JotForm schema changes (e.g. new questions added for sets 3–8):
    - `IMAGE_BLOCK_BATCH_QIDS` — `b1FollowUp`, `b1Obs`, `b2FollowUp`, `b2Obs`, `b3Obs`, `b4Obs` per set
    - `IMAGE_BATCH_FOLLOWUP_OPTIONS` — update if any checkbox option text changes
    - `DISTRICT_MAP` — update if dropdown options change
-3. Run `node docs/test_submission.cjs --submit` to validate, then delete the test submission.
-4. Also update `VITE_JOTFORM_FORM_ID` in `.env` and GitHub Secrets if the form ID changes.
+
+3. You can rerun the audit without fetching again:
+   ```
+   npm run jotform:check
+   ```
+
+4. Run a payload dry-run or real submission test:
+   ```
+   npm run jotform:test
+   node docs/test_submission.cjs --submit
+   ```
+
+5. Also update `VITE_JOTFORM_FORM_ID` in `.env` and GitHub Secrets if the form ID changes.
