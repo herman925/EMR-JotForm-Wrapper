@@ -413,6 +413,7 @@ export default function App() {
                             block={block}
                             values={imageValues[block.index] ?? {}}
                             onChange={(k, v) => setImageBlockValue(block.index, k, v)}
+                            showBatch4={student?.district === 'Tuen Mun'}
                           />
                         </div>
                       ))}

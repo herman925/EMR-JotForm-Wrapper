@@ -25,7 +25,7 @@ import { IMAGE_BATCH_FOLLOWUP_OPTIONS } from '../constants/questions'
  *   }
  *   onChange (key, value) => void
  */
-export default function ImageBlock({ block, values = {}, onChange }) {
+export default function ImageBlock({ block, values = {}, onChange, showBatch4 = true }) {
   const n = block.index
 
   return (
@@ -91,21 +91,25 @@ export default function ImageBlock({ block, values = {}, onChange }) {
         onChange={v => onChange('b3Obs', v)}
       />
 
-      {/* ── Batch 4 ─────────────────────────────────────────────────────── */}
-      <ImagePicker
-        images={block.batch4}
-        selected={values.batch4Selected ?? null}
-        onSelect={(src, isCorrect) => {
-          onChange('batch4Selected', src)
-          onChange('batch4Correct', isCorrect)
-        }}
-        question={`Q${n}.4  你記唔記得以下邊個係你喺童亮館有關聯嘅？`}
-      />
-      <ObservationBox
-        label={`Q${n}.4b. 觀察／補充記錄`}
-        value={values.b4Obs}
-        onChange={v => onChange('b4Obs', v)}
-      />
+      {/* ── Batch 4 — Tuen Mun only ──────────────────────────────────────── */}
+      {showBatch4 && (
+        <>
+          <ImagePicker
+            images={block.batch4}
+            selected={values.batch4Selected ?? null}
+            onSelect={(src, isCorrect) => {
+              onChange('batch4Selected', src)
+              onChange('batch4Correct', isCorrect)
+            }}
+            question={`Q${n}.4  你記唔記得以下邊個係你喺童亮館有關聯嘅？`}
+          />
+          <ObservationBox
+            label={`Q${n}.4b. 觀察／補充記錄`}
+            value={values.b4Obs}
+            onChange={v => onChange('b4Obs', v)}
+          />
+        </>
+      )}
 
     </div>
   )
